@@ -10,6 +10,7 @@
  */
 
 import React from 'react';
+import { InfoTooltip, FRACTAL_TOOLTIPS } from '../InfoTooltip';
 
 export default function GovernanceBox({ meta, recommendation, canAct, minRequired }) {
   const resolved = meta?.resolvedCount || 0;
@@ -31,15 +32,18 @@ export default function GovernanceBox({ meta, recommendation, canAct, minRequire
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} data-testid="governance-box">
       <div style={styles.header}>
-        <h3 style={styles.title}>Governance Actions</h3>
+        <div style={styles.titleRow}>
+          <h3 style={styles.title}>Governance Actions</h3>
+          <InfoTooltip {...FRACTAL_TOOLTIPS.governanceActions} severity="warning" />
+        </div>
         <span style={{
           ...styles.statusBadge,
           backgroundColor: canAct ? '#dcfce7' : '#f1f5f9',
           color: canAct ? '#166534' : '#64748b'
         }}>
-          {canAct ? 'Actions Available' : 'Actions Locked'}
+          {canAct ? 'Действия доступны' : 'Действия заблокированы'}
         </span>
       </div>
 
@@ -48,10 +52,10 @@ export default function GovernanceBox({ meta, recommendation, canAct, minRequire
         <div style={styles.lockWarning}>
           <span style={styles.lockIcon}>🔒</span>
           <div>
-            <strong>Governance actions require {minRequired}+ resolved signals</strong>
+            <strong>Для разблокировки требуется {minRequired}+ resolved signals</strong>
             <br />
             <span style={styles.lockHint}>
-              Current: {resolved} resolved. {minRequired - resolved} more needed before any manual action.
+              Сейчас: {resolved} resolved. Ещё {minRequired - resolved} до разблокировки.
             </span>
           </div>
         </div>
@@ -70,7 +74,7 @@ export default function GovernanceBox({ meta, recommendation, canAct, minRequire
           }}
           data-testid="promotion-btn"
         >
-          Create Promotion Proposal
+          Создать Promotion Proposal
         </button>
 
         <button
@@ -106,23 +110,28 @@ export default function GovernanceBox({ meta, recommendation, canAct, minRequire
       <div style={styles.auditNote}>
         <span style={styles.auditIcon}>📝</span>
         <span>
-          All governance actions are logged to audit trail and require human confirmation.
-          No automatic promotions.
+          Все governance-действия логируются в audit trail и требуют подтверждения.
+          Автоматические promotions отключены.
         </span>
       </div>
 
       {/* Verdict Context */}
       {canAct && (
         <div style={styles.verdictContext}>
-          <strong>Current Verdict:</strong> {verdict}
+          <strong>Текущий вердикт:</strong> {verdict}
           {verdict === 'SHADOW_OUTPERFORMS' && (
             <span style={styles.verdictHint}>
-              — Shadow shows statistically significant improvement. Consider promotion.
+              — Shadow показывает статистически значимое улучшение. Рекомендуется рассмотреть promotion.
             </span>
           )}
           {verdict === 'HOLD_ACTIVE' && (
             <span style={styles.verdictHint}>
-              — Active model performing adequately. No action recommended.
+              — Active модель работает адекватно. Действия не рекомендуются.
+            </span>
+          )}
+          {verdict === 'INSUFFICIENT_DATA' && (
+            <span style={styles.verdictHint}>
+              — Недостаточно данных для статистически значимого вывода.
             </span>
           )}
         </div>
@@ -143,6 +152,11 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16
+  },
+  titleRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8
   },
   title: {
     margin: 0,
