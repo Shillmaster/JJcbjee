@@ -267,10 +267,14 @@ export function drawForecast(
   });
 
   // === 8. FORECAST INFO LABEL ===
-  const returnPct = ((forecast.R30 || 0) * 100).toFixed(1);
-  const confPct = ((forecast.confidence || 0) * 100).toFixed(1);
-  const sign = (forecast.R30 || 0) >= 0 ? "+" : "";
-  const forecastType = forecast.type === 'aftermath-driven' ? '📈' : '📊';
+  // BLOCK 70.2: Show info based on actual forecast data
+  const finalPrice = pricePath[N - 1];
+  const currentPrice = forecast.currentPrice || pricePath[0];
+  const returnPct = currentPrice ? (((finalPrice - currentPrice) / currentPrice) * 100).toFixed(1) : '0.0';
+  const confValue = forecast.confidenceDecay?.[0] || 1;
+  const confPct = (confValue * 100).toFixed(1);
+  const sign = parseFloat(returnPct) >= 0 ? "+" : "";
+  const aftermathDays = forecast.aftermathDays || N;
   
   ctx.save();
   ctx.font = "11px system-ui";
@@ -280,7 +284,7 @@ export function drawForecast(
   const labelY = canvasHeight - marginBottom + 18;
   
   ctx.fillStyle = "rgba(0,0,0,0.6)";
-  ctx.fillText(`${forecastType} Forecast: ${sign}${returnPct}%`, labelX, labelY);
+  ctx.fillText(`📈 Forecast: ${sign}${returnPct}%`, labelX, labelY);
   
   ctx.fillStyle = "rgba(0,0,0,0.4)";
   ctx.fillText(`Conf: ${confPct}%`, labelX + 130, labelY);
