@@ -118,6 +118,7 @@ export function FractalMainChart({
         chart={chart} 
         forecast={forecast} 
         focus={focus}
+        normalizedSeries={focusPack?.normalizedSeries}
         width={width} 
         height={height} 
       />
