@@ -183,6 +183,8 @@ export function FractalHybridChart({
   }
 
   const currentPrice = chart.candles[chart.candles.length - 1].c || 0;
+  const matches = focusPack?.overlay?.matches || [];
+  const primaryMatchId = focusPack?.primarySelection?.primaryMatch?.id || matches[0]?.id;
 
   return (
     <div style={{ width, background: "#fff", borderRadius: 12, overflow: "hidden" }}>
@@ -198,13 +200,24 @@ export function FractalHybridChart({
         height={height} 
       />
       
+      {/* BLOCK 73.4: Interactive Match Picker */}
+      {matches.length > 1 && (
+        <MatchPicker 
+          matches={matches}
+          selectedId={selectedMatchId || primaryMatchId}
+          primaryId={primaryMatchId}
+          onSelect={handleMatchSelect}
+          loading={replayLoading}
+        />
+      )}
+      
       {/* Hybrid Summary Panel */}
       <HybridSummaryPanel 
         forecast={forecast}
         primaryMatch={primaryMatch}
         currentPrice={currentPrice}
         focus={focus}
-        divergence={focusPack?.divergence}
+        divergence={activeDivergence}
       />
     </div>
   );
