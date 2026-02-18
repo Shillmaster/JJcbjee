@@ -1,0 +1,47 @@
+{
+  "summary": "Completed comprehensive testing of Fractal Alert System v2.1.1 - All backend API endpoints working correctly, frontend admin alerts tab functional, alert notifications properly respect FRACTAL_ALERTS_ENABLED=false setting",
+  "backend_issues": {
+    "critical_bugs": [],
+    "flaky_endpoints": [],
+    "configuration_notes": [
+      {
+        "component": "Alert System",
+        "note": "FRACTAL_ALERTS_ENABLED=false in .env - test alerts fail with telegram error as expected",
+        "impact": "Expected behavior - alerts disabled in test environment",
+        "fix_priority": "NONE"
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_tests": [
+    "GET /api/fractal/v2.1/admin/alerts/quota - returns correct quota with max: 3",
+    "GET /api/fractal/v2.1/admin/alerts/stats - returns alert statistics structure",
+    "POST /api/fractal/v2.1/admin/alerts/check - dry run returns ok: true, dryRun: true",
+    "POST /api/fractal/v2.1/admin/alerts/run - production run respects FRACTAL_ALERTS_ENABLED=false",
+    "POST /api/fractal/v2.1/admin/alerts/test - test alert fails with telegram error when FRACTAL_ALERTS_ENABLED=false",
+    "GET /api/fractal/v2.1/admin/overview - shows governance mode NORMAL and freeze status",
+    "Frontend Admin Alerts tab loads correctly with all expected UI components",
+    "Alert quota display shows 0/3 with 3 remaining",
+    "Alert statistics display shows last 24h and 7d counts",
+    "Alert history table shows 'No alerts found' (expected)",
+    "Filter dropdowns for Level, Type, Status are present",
+    "Send Test Alert button is clickable and functional",
+    "Test alert properly fails when alerts are disabled"
+  ],
+  "test_report_links": [
+    "/app/backend/backend_test.py"
+  ],
+  "success_percentage": {
+    "backend": "100% - All alert API endpoints working correctly",
+    "frontend": "100% - Admin alerts tab fully functional",
+    "integration": "100% - Backend/frontend integration working properly"
+  },
+  "action_item_for_main_agent": "",
+  "updated_files": [],
+  "should_call_test_agent_after_fix": "false",
+  "should_main_agent_test_itself": "true"
+}
