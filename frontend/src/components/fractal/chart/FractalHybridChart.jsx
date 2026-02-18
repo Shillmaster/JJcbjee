@@ -121,10 +121,26 @@ export function FractalHybridChart({
   }, [chart, focusPack]);
   
   // Get primary replay match - BLOCK 73.1: Use weighted primaryMatch
+  // BLOCK 73.4: Override with custom replay pack if selected
   const primaryMatch = useMemo(() => {
     if (!chart?.candles?.length) return null;
     
     const currentPrice = chart.candles[chart.candles.length - 1].c;
+    
+    // BLOCK 73.4: Use custom replay pack if user selected a match
+    if (customReplayPack) {
+      return {
+        id: customReplayPack.matchId,
+        date: customReplayPack.matchMeta.date,
+        similarity: customReplayPack.matchMeta.similarity,
+        phase: customReplayPack.matchMeta.phase,
+        replayPath: customReplayPack.replayPath.slice(1).map(p => p.price), // Skip t=0
+        selectionScore: customReplayPack.matchMeta.score / 100,
+        selectionReason: 'User selected',
+        // Custom divergence for this match
+        customDivergence: customReplayPack.divergence
+      };
+    }
     
     // BLOCK 73.1: Prefer primarySelection.primaryMatch from backend
     const match = focusPack?.primarySelection?.primaryMatch 
@@ -148,7 +164,15 @@ export function FractalHybridChart({
       // For future divergence calculation
       returns: match.aftermathNormalized
     };
-  }, [focusPack, chart]);
+  }, [focusPack, chart, customReplayPack]);
+  
+  // BLOCK 73.4: Get divergence - use custom if available
+  const activeDivergence = useMemo(() => {
+    if (customReplayPack?.divergence) {
+      return customReplayPack.divergence;
+    }
+    return focusPack?.divergence;
+  }, [focusPack, customReplayPack]);
 
   if (loading || !chart?.candles) {
     return (
