@@ -110,9 +110,7 @@ export function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-gray-900">Fractal V2.1 — Institutional Panel</h1>
-              <p className="text-sm text-gray-500">
-                {data?.meta?.version || 'v2.1'} | Symbol: {data?.meta?.symbol || 'BTC'}
-              </p>
+              <p className="text-sm text-gray-500">BTC</p>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-xs text-gray-400">
