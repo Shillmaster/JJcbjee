@@ -182,6 +182,7 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   console.log('[Fractal] BLOCK 57: Shadow Divergence registered');
   console.log('[Fractal] OPS: Telegram + Cron routes registered');
   console.log('[Fractal] BLOCK E: Hardened OPS (rate limit, retry, idempotency) registered');
+  console.log('[Fractal] BLOCK 70.2: FocusPack (Real Horizon Binding) registered');
   console.log('[Fractal] BLOCK 58: Hierarchical Resolver (Bias + Timing + Final) registered');
   console.log('[Fractal] BLOCK 59: Extended Horizons (90d/180d/365d) registered');
   console.log('[Fractal] BLOCK 59.1: Global Regime Panel registered');
