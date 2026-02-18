@@ -66,16 +66,17 @@ function Tooltip({ candle, sma, phase }) {
   );
 }
 
-export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'price', primaryMatch, width, height }) {
+export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'price', primaryMatch, normalizedSeries, width, height }) {
   const ref = useRef(null);
   const [hoverIndex, setHoverIndex] = useState(null);
   
-  // BLOCK 72: Determine render mode based on focus
+  // BLOCK 73.1.1: Determine axis mode from backend normalizedSeries
   const renderMode = focus === '7d' ? 'CAPSULE_7D' : 'TRAJECTORY';
-  const axisMode = (focus === '180d' || focus === '365d') ? 'PCT_NORMALIZED' : 'PRICE';
+  const axisMode = normalizedSeries?.mode === 'PERCENT' ? 'PERCENT' : 'PRICE';
+  const isPercentMode = axisMode === 'PERCENT';
 
   // Increased right margin for forecast zone (enough for full 30d + labels)
-  const margins = useMemo(() => ({ left: 60, right: 320, top: 24, bottom: 36 }), []);
+  const margins = useMemo(() => ({ left: 70, right: 320, top: 24, bottom: 36 }), []);
 
   // Mouse handler
   useEffect(() => {
