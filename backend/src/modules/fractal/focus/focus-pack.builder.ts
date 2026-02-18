@@ -127,7 +127,7 @@ export async function buildFocusPack(
     asOf,
   };
   
-  return { meta, overlay, forecast, diagnostics };
+  return { meta, overlay, forecast, diagnostics, primarySelection };
 }
 
 // ═══════════════════════════════════════════════════════════════
