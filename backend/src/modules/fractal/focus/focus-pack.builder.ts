@@ -487,4 +487,95 @@ function buildDiagnostics(
   };
 }
 
+// ═══════════════════════════════════════════════════════════════
+// BLOCK 73.1.1 — NORMALIZED SERIES BUILDER (STRUCTURE % MODE)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Build normalized series for % axis mode (STRUCTURE horizons)
+ * 
+ * For 180D/365D: mode = PERCENT
+ * For 7D/14D/30D/90D: mode = RAW
+ * 
+ * This allows frontend to switch Y-axis to % from NOW
+ */
+function buildNormalizedSeries(
+  forecast: ForecastPack,
+  primaryMatch: any,
+  basePrice: number,
+  tier: 'TIMING' | 'TACTICAL' | 'STRUCTURE'
+): NormalizedSeries {
+  // Determine mode based on tier
+  const mode: AxisMode = tier === 'STRUCTURE' ? 'PERCENT' : 'RAW';
+  
+  // Convert price to percent: ((value / basePrice) - 1) * 100
+  const toPercent = (v: number): number => ((v / basePrice) - 1) * 100;
+  
+  // Raw series from forecast
+  const rawPath = forecast.path || [];
+  const rawUpperBand = forecast.upperBand || [];
+  const rawLowerBand = forecast.lowerBand || [];
+  
+  // Convert to percent
+  const percentPath = rawPath.map(toPercent);
+  const percentUpperBand = rawUpperBand.map(toPercent);
+  const percentLowerBand = rawLowerBand.map(toPercent);
+  
+  // Replay from primary match aftermath
+  let rawReplay: number[] = [];
+  let percentReplay: number[] = [];
+  
+  if (primaryMatch?.aftermathNormalized?.length) {
+    // aftermathNormalized is already in % format (0.05 = 5%)
+    // Convert to actual prices and percent from NOW
+    rawReplay = primaryMatch.aftermathNormalized.map((r: number) => basePrice * (1 + r));
+    percentReplay = primaryMatch.aftermathNormalized.map((r: number) => r * 100);
+  }
+  
+  // Calculate Y-axis range (with 15% padding for readability)
+  const allPercent = [
+    ...percentPath,
+    ...percentUpperBand,
+    ...percentLowerBand,
+    ...percentReplay,
+    0 // NOW always included
+  ].filter(v => isFinite(v));
+  
+  const allPrices = [
+    ...rawPath,
+    ...rawUpperBand,
+    ...rawLowerBand,
+    ...rawReplay,
+    basePrice
+  ].filter(v => isFinite(v));
+  
+  const minPercent = allPercent.length > 0 ? Math.min(...allPercent) : -20;
+  const maxPercent = allPercent.length > 0 ? Math.max(...allPercent) : 20;
+  const minPrice = allPrices.length > 0 ? Math.min(...allPrices) : basePrice * 0.8;
+  const maxPrice = allPrices.length > 0 ? Math.max(...allPrices) : basePrice * 1.2;
+  
+  // Add 15% padding
+  const percentPadding = (maxPercent - minPercent) * 0.15;
+  const pricePadding = (maxPrice - minPrice) * 0.15;
+  
+  return {
+    mode,
+    basePrice,
+    rawPath,
+    percentPath,
+    rawUpperBand,
+    rawLowerBand,
+    percentUpperBand,
+    percentLowerBand,
+    rawReplay,
+    percentReplay,
+    yRange: {
+      minPercent: Math.round((minPercent - percentPadding) * 10) / 10,
+      maxPercent: Math.round((maxPercent + percentPadding) * 10) / 10,
+      minPrice: Math.round(minPrice - pricePadding),
+      maxPrice: Math.round(maxPrice + pricePadding),
+    },
+  };
+}
+
 // Additional helpers already defined above
