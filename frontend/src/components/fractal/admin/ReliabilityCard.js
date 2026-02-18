@@ -1,70 +1,139 @@
 /**
- * BLOCK 50 — Reliability Card
- * Shows reliability score, badge, and breakdown
+ * BLOCK 50 — Reliability Card (Improved UI)
+ * Shows reliability score, badge, and breakdown with tooltips
  */
 
 import React from 'react';
+import { Gauge, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { InfoTooltip, FRACTAL_TOOLTIPS } from './InfoTooltip';
 
-const badgeColors = {
-  OK: 'bg-green-100 text-green-700',
-  WARN: 'bg-amber-100 text-amber-700',
-  DEGRADED: 'bg-orange-100 text-orange-700',
-  CRITICAL: 'bg-red-100 text-red-700',
+const badgeConfig = {
+  OK: { bg: 'bg-green-100', text: 'text-green-700', icon: TrendingUp },
+  WARN: { bg: 'bg-amber-100', text: 'text-amber-700', icon: Minus },
+  DEGRADED: { bg: 'bg-orange-100', text: 'text-orange-700', icon: TrendingDown },
+  CRITICAL: { bg: 'bg-red-100', text: 'text-red-700', icon: TrendingDown },
+};
+
+const breakdownLabels = {
+  data: { name: 'Качество данных', description: 'Полнота и актуальность входных данных' },
+  model: { name: 'Стабильность модели', description: 'Последовательность работы модели' },
+  signal: { name: 'Согласованность', description: 'Согласованность сигналов между таймфреймами' },
+  trend: { name: 'Тренд надёжности', description: 'Динамика надёжности за период' },
 };
 
 export function ReliabilityCard({ model }) {
   if (!model?.reliability) return null;
   
   const { reliability } = model;
-  const badgeColor = badgeColors[reliability.badge] || badgeColors.OK;
+  const badge = badgeConfig[reliability.badge] || badgeConfig.OK;
+  const BadgeIcon = badge.icon;
+  const score = reliability.score * 100;
+  
+  // Determine score color
+  const getScoreColor = (s) => {
+    if (s >= 70) return 'text-green-600';
+    if (s >= 50) return 'text-amber-600';
+    return 'text-red-600';
+  };
+  
+  const getBarColor = (s) => {
+    if (s >= 70) return 'bg-green-500';
+    if (s >= 50) return 'bg-amber-500';
+    return 'bg-red-500';
+  };
   
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Reliability</h3>
-        <span className={`px-3 py-1 rounded-full text-xs font-bold ${badgeColor}`}>
-          {reliability.badge}
-        </span>
-      </div>
-      
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm text-gray-500">Score</span>
-          <span className="text-2xl font-bold text-gray-800">{(reliability.score * 100).toFixed(0)}%</span>
+    <div 
+      className="rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:shadow-lg"
+      data-testid="reliability-card"
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Reliability</h3>
+          <InfoTooltip {...FRACTAL_TOOLTIPS.reliability} placement="right" />
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-3">
-          <div 
-            className={`h-3 rounded-full ${reliability.score >= 0.7 ? 'bg-green-500' : reliability.score >= 0.5 ? 'bg-amber-500' : 'bg-red-500'}`}
-            style={{ width: `${reliability.score * 100}%` }}
-          ></div>
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${badge.bg}`}>
+          <BadgeIcon className={`w-4 h-4 ${badge.text}`} />
+          <span className={`text-sm font-bold ${badge.text}`}>{reliability.badge}</span>
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="text-center p-2 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-500">Policy</p>
-          <p className="text-sm font-medium text-gray-700">{reliability.policy}</p>
-        </div>
-        <div className="text-center p-2 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-500">Modifier</p>
-          <p className="text-sm font-medium text-gray-700">{reliability.modifier.toFixed(2)}x</p>
-        </div>
-      </div>
-      
-      <div className="space-y-2">
-        <p className="text-xs font-semibold text-gray-500 uppercase">Breakdown</p>
-        {Object.entries(reliability.breakdown).map(([key, value]) => (
-          <div key={key} className="flex items-center gap-2">
-            <span className="text-xs text-gray-600 w-20 capitalize">{key}</span>
-            <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-              <div 
-                className={`h-1.5 rounded-full ${value >= 0.7 ? 'bg-green-500' : value >= 0.5 ? 'bg-amber-500' : 'bg-red-500'}`}
-                style={{ width: `${value * 100}%` }}
-              ></div>
+      {/* Score Display */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <div className={`p-3 rounded-xl ${score >= 70 ? 'bg-green-50' : score >= 50 ? 'bg-amber-50' : 'bg-red-50'}`}>
+              <Gauge className={`w-8 h-8 ${getScoreColor(score)}`} />
             </div>
-            <span className="text-xs font-mono text-gray-600 w-10 text-right">{(value * 100).toFixed(0)}%</span>
+            <div>
+              <p className="text-sm text-gray-500 font-medium">Score</p>
+              <p className={`text-3xl font-black ${getScoreColor(score)}`}>{score.toFixed(0)}%</p>
+            </div>
           </div>
-        ))}
+          
+          {/* Modifier */}
+          <div className="text-right">
+            <p className="text-xs text-gray-500 uppercase mb-1">Modifier</p>
+            <p className="text-xl font-bold text-gray-800">{reliability.modifier?.toFixed(2) || '1.00'}x</p>
+          </div>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="relative">
+          <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+            <div 
+              className={`h-3 ${getBarColor(score)} transition-all duration-700 ease-out`}
+              style={{ width: `${score}%` }}
+            ></div>
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-[10px] text-gray-400">0%</span>
+            <span className="text-[10px] text-red-500 font-medium">50%</span>
+            <span className="text-[10px] text-amber-500 font-medium">70%</span>
+            <span className="text-[10px] text-gray-400">100%</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Info boxes */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="p-3 bg-gray-50 rounded-xl text-center">
+          <p className="text-xs text-gray-500 uppercase mb-1">Policy</p>
+          <p className="text-sm font-bold text-gray-800">{reliability.policy || 'STANDARD'}</p>
+        </div>
+        <div className="p-3 bg-gray-50 rounded-xl text-center">
+          <p className="text-xs text-gray-500 uppercase mb-1">Влияние на размер</p>
+          <p className={`text-sm font-bold ${reliability.modifier < 1 ? 'text-amber-600' : 'text-green-600'}`}>
+            {reliability.modifier < 1 ? 'Снижен' : 'Полный'}
+          </p>
+        </div>
+      </div>
+      
+      {/* Breakdown */}
+      <div>
+        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Компоненты</p>
+        <div className="space-y-2.5">
+          {Object.entries(reliability.breakdown || {}).map(([key, value]) => {
+            const label = breakdownLabels[key] || { name: key, description: '' };
+            const percent = value * 100;
+            
+            return (
+              <div key={key} className="group">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-gray-600 font-medium">{label.name}</span>
+                  <span className={`text-xs font-bold ${getScoreColor(percent)}`}>{percent.toFixed(0)}%</span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                  <div 
+                    className={`h-2 ${getBarColor(percent)} transition-all duration-500`}
+                    style={{ width: `${percent}%` }}
+                  ></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
