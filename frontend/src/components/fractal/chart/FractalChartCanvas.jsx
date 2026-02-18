@@ -176,7 +176,25 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', width, heig
 
     // anchor at last candle x
     const xAnchor = x(candles.length - 1);
-    drawForecast(ctx, forecast, xAnchor, y, plotW, margins.top, margins.bottom, height);
+    
+    // BLOCK 72: Choose forecast renderer based on focus
+    if (renderMode === 'CAPSULE_7D' && forecast?.distribution7d) {
+      // 7D: Draw probability capsule instead of trajectory
+      drawForecastCapsule7d(
+        ctx,
+        forecast.distribution7d,
+        forecast.currentPrice,
+        xAnchor,
+        y,
+        plotW,
+        margins.top,
+        margins.bottom,
+        height
+      );
+    } else {
+      // 14D+: Draw aftermath-driven trajectory with fan
+      drawForecast(ctx, forecast, xAnchor, y, plotW, margins.top, margins.bottom, height);
+    }
 
     // Crosshair
     if (hoverIndex !== null && hoverIndex >= 0 && hoverIndex < candles.length) {
