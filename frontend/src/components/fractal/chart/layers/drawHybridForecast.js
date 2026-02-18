@@ -1,9 +1,11 @@
 /**
  * STEP A — Hybrid Forecast Renderer
+ * BLOCK 73.3 — 14D Continuity Fix: Added intermediate horizon markers
  * 
  * Draws two projections on same canvas:
  * - Synthetic (green) - model forecast
  * - Replay (purple) - primary historical match aftermath
+ * - Intermediate markers (7d on 14d trajectory, etc.)
  * 
  * Uses Catmull-Rom spline for smooth curves.
  */
@@ -17,7 +19,8 @@ export function drawHybridForecast(
   plotW,
   marginTop,
   marginBottom,
-  canvasHeight
+  canvasHeight,
+  markers = [] // BLOCK 73.3: Accept markers for continuity
 ) {
   if (!forecast?.pricePath?.length) return;
   
