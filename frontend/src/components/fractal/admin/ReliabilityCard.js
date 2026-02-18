@@ -1,6 +1,7 @@
 /**
- * BLOCK 50 — Reliability Card (Improved UI)
- * Shows reliability score, badge, and breakdown with tooltips
+ * BLOCK 50 — Reliability Card
+ * English: titles, metric names, badges
+ * Russian: only in tooltips
  */
 
 import React from 'react';
@@ -14,13 +15,6 @@ const badgeConfig = {
   CRITICAL: { bg: 'bg-red-100', text: 'text-red-700', icon: TrendingDown },
 };
 
-const breakdownLabels = {
-  data: { name: 'Качество данных', description: 'Полнота и актуальность входных данных' },
-  model: { name: 'Стабильность модели', description: 'Последовательность работы модели' },
-  signal: { name: 'Согласованность', description: 'Согласованность сигналов между таймфреймами' },
-  trend: { name: 'Тренд надёжности', description: 'Динамика надёжности за период' },
-};
-
 export function ReliabilityCard({ model }) {
   if (!model?.reliability) return null;
   
@@ -29,7 +23,6 @@ export function ReliabilityCard({ model }) {
   const BadgeIcon = badge.icon;
   const score = reliability.score * 100;
   
-  // Determine score color
   const getScoreColor = (s) => {
     if (s >= 70) return 'text-green-600';
     if (s >= 50) return 'text-amber-600';
@@ -50,7 +43,7 @@ export function ReliabilityCard({ model }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Reliability</h3>
+          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">RELIABILITY</h3>
           <InfoTooltip {...FRACTAL_TOOLTIPS.reliability} placement="right" />
         </div>
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${badge.bg}`}>
@@ -103,25 +96,24 @@ export function ReliabilityCard({ model }) {
           <p className="text-sm font-bold text-gray-800">{reliability.policy || 'STANDARD'}</p>
         </div>
         <div className="p-3 bg-gray-50 rounded-xl text-center">
-          <p className="text-xs text-gray-500 uppercase mb-1">Влияние на размер</p>
+          <p className="text-xs text-gray-500 uppercase mb-1">Impact</p>
           <p className={`text-sm font-bold ${reliability.modifier < 1 ? 'text-amber-600' : 'text-green-600'}`}>
-            {reliability.modifier < 1 ? 'Снижен' : 'Полный'}
+            {reliability.modifier < 1 ? 'REDUCED' : 'FULL'}
           </p>
         </div>
       </div>
       
       {/* Breakdown */}
       <div>
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Компоненты</p>
+        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">BREAKDOWN</p>
         <div className="space-y-2.5">
           {Object.entries(reliability.breakdown || {}).map(([key, value]) => {
-            const label = breakdownLabels[key] || { name: key, description: '' };
             const percent = value * 100;
             
             return (
               <div key={key} className="group">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-gray-600 font-medium">{label.name}</span>
+                  <span className="text-xs text-gray-600 font-medium capitalize">{key}</span>
                   <span className={`text-xs font-bold ${getScoreColor(percent)}`}>{percent.toFixed(0)}%</span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
