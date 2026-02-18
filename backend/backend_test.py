@@ -2857,6 +2857,23 @@ class FractalAPITester:
         ]
 
         # ═══════════════════════════════════════════════════════════════
+        # BLOCK 67-68: ALERT ENGINE TESTS
+        # ═══════════════════════════════════════════════════════════════
+        print("\n🚨 BLOCK 67-68: ALERT ENGINE SYSTEM")
+        print("-" * 40)
+        
+        alert_tests = [
+            self.test_alerts_list(),
+            self.test_alerts_quota(),
+            self.test_alerts_stats(),
+            self.test_alerts_latest(),
+            self.test_alerts_check_dry_run(),
+            self.test_alerts_run_production(),
+            self.test_alerts_test_telegram(),
+            self.test_alerts_filters(),
+        ]
+
+        # ═══════════════════════════════════════════════════════════════
         # TEST RESULTS SUMMARY
         # ═══════════════════════════════════════════════════════════════
         print("\n" + "=" * 70)
