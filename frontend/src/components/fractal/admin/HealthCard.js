@@ -1,6 +1,7 @@
 /**
- * BLOCK 50 — Health Card (Improved UI)
- * Shows overall health state and top risks with tooltips
+ * BLOCK 50 — Health Card
+ * English: titles, status badges, metric names
+ * Russian: descriptions, explanations
  */
 
 import React from 'react';
@@ -64,7 +65,7 @@ export function HealthCard({ health }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">System Health</h3>
+          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">SYSTEM HEALTH</h3>
           <InfoTooltip {...FRACTAL_TOOLTIPS.health} placement="right" />
         </div>
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${colors.barBg}`}>
@@ -77,7 +78,7 @@ export function HealthCard({ health }) {
       {/* Score Display */}
       <div className="mb-5">
         <div className="flex items-baseline justify-between mb-2">
-          <span className="text-sm text-gray-500 font-medium">Health Score</span>
+          <span className="text-sm text-gray-500 font-medium">Score</span>
           <div className="flex items-baseline gap-1">
             <span className={`text-4xl font-black ${colors.text}`}>{score.toFixed(0)}</span>
             <span className={`text-lg font-bold ${colors.text}`}>%</span>
@@ -92,7 +93,6 @@ export function HealthCard({ health }) {
               style={{ width: `${score}%` }}
             ></div>
           </div>
-          {/* Threshold markers */}
           <div className="flex justify-between mt-1">
             <span className="text-[10px] text-gray-400">0%</span>
             <span className="text-[10px] text-amber-500 font-medium">60%</span>
@@ -102,7 +102,7 @@ export function HealthCard({ health }) {
         </div>
       </div>
       
-      {/* Headline */}
+      {/* Headline - Russian description */}
       {health.headline && (
         <div className="mb-5 p-3 bg-white/50 rounded-xl border border-gray-100">
           <p className="text-sm text-gray-700 leading-relaxed">{health.headline}</p>
@@ -112,7 +112,7 @@ export function HealthCard({ health }) {
       {/* Top Risks */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Ключевые риски</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">TOP RISKS</p>
           <InfoTooltip {...FRACTAL_TOOLTIPS.topRisks} placement="right" />
         </div>
         <div className="space-y-2">
