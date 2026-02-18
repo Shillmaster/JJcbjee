@@ -209,7 +209,9 @@ function HybridSummaryPanel({ forecast, primaryMatch, currentPrice, focus }) {
                 {replayReturn >= 0 ? '+' : ''}{replayReturn.toFixed(1)}%
               </div>
               <div style={styles.label}>
-                Historical ({primaryMatch?.similarity ? (primaryMatch.similarity * 100).toFixed(0) : '—'}% sim)
+                {primaryMatch?.id || 'Historical'} ({primaryMatch?.selectionScore 
+                  ? (primaryMatch.selectionScore * 100).toFixed(0) 
+                  : (primaryMatch?.similarity ? (primaryMatch.similarity * 100).toFixed(0) : '—')}% match)
               </div>
             </>
           ) : (
