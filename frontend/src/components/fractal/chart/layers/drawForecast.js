@@ -79,30 +79,51 @@ export function drawForecast(
   ctx.fillText("NOW", xRightAnchor, marginTop - 6);
   ctx.restore();
 
-  // === 4. CONFIDENCE BAND (√t growth) ===
+  // === 4. CONFIDENCE BAND (√t growth) with SPLINE ===
   if (upperBand?.length && lowerBand?.length) {
+    // Build spline points for bands
+    const upperPoints = [{ x: xRightAnchor, y: y(pricePath[0]) }];
+    const lowerPoints = [{ x: xRightAnchor, y: y(pricePath[0]) }];
+    
+    for (let i = 0; i < upperBand.length; i++) {
+      upperPoints.push({ x: dayToX(i + 1), y: y(upperBand[i]) });
+      lowerPoints.push({ x: dayToX(i + 1), y: y(lowerBand[i]) });
+    }
+    
     ctx.save();
     ctx.beginPath();
     
-    // Start from current price
-    ctx.moveTo(xRightAnchor, y(pricePath[0]));
-    
-    // Upper boundary (forward)
-    for (let i = 0; i < upperBand.length; i++) {
-      const px = dayToX(i + 1);
-      const py = y(upperBand[i]);
-      ctx.lineTo(px, py);
+    // Draw upper spline
+    ctx.moveTo(upperPoints[0].x, upperPoints[0].y);
+    for (let i = 0; i < upperPoints.length - 1; i++) {
+      const p0 = upperPoints[i - 1] || upperPoints[i];
+      const p1 = upperPoints[i];
+      const p2 = upperPoints[i + 1];
+      const p3 = upperPoints[i + 2] || p2;
+      
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
     }
     
-    // Lower boundary (backward)
-    for (let i = lowerBand.length - 1; i >= 0; i--) {
-      const px = dayToX(i + 1);
-      const py = y(lowerBand[i]);
-      ctx.lineTo(px, py);
+    // Draw lower spline (backward)
+    for (let i = lowerPoints.length - 1; i > 0; i--) {
+      const p0 = lowerPoints[i + 1] || lowerPoints[i];
+      const p1 = lowerPoints[i];
+      const p2 = lowerPoints[i - 1];
+      const p3 = lowerPoints[i - 2] || p2;
+      
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
     }
     
-    // Close back to start
-    ctx.lineTo(xRightAnchor, y(pricePath[0]));
     ctx.closePath();
     
     // Gradient fill — fades out towards end
@@ -110,32 +131,48 @@ export function drawForecast(
       xRightAnchor, 0,
       xRightAnchor + forecastZoneWidth, 0
     );
-    bandGradient.addColorStop(0, "rgba(22, 163, 74, 0.20)");
-    bandGradient.addColorStop(0.5, "rgba(22, 163, 74, 0.12)");
-    bandGradient.addColorStop(1, "rgba(22, 163, 74, 0.05)");
+    bandGradient.addColorStop(0, "rgba(22, 163, 74, 0.18)");
+    bandGradient.addColorStop(0.5, "rgba(22, 163, 74, 0.10)");
+    bandGradient.addColorStop(1, "rgba(22, 163, 74, 0.04)");
     ctx.fillStyle = bandGradient;
     ctx.fill();
     ctx.restore();
 
-    // Band edges (subtle)
+    // Band edges (subtle spline)
     ctx.save();
-    ctx.strokeStyle = "rgba(22, 163, 74, 0.25)";
+    ctx.strokeStyle = "rgba(22, 163, 74, 0.20)";
     ctx.lineWidth = 1;
     ctx.setLineDash([3, 3]);
     
-    // Upper edge
+    // Upper edge spline
     ctx.beginPath();
-    ctx.moveTo(xRightAnchor, y(pricePath[0]));
-    for (let i = 0; i < upperBand.length; i++) {
-      ctx.lineTo(dayToX(i + 1), y(upperBand[i]));
+    ctx.moveTo(upperPoints[0].x, upperPoints[0].y);
+    for (let i = 0; i < upperPoints.length - 1; i++) {
+      const p0 = upperPoints[i - 1] || upperPoints[i];
+      const p1 = upperPoints[i];
+      const p2 = upperPoints[i + 1];
+      const p3 = upperPoints[i + 2] || p2;
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
     }
     ctx.stroke();
     
-    // Lower edge
+    // Lower edge spline
     ctx.beginPath();
-    ctx.moveTo(xRightAnchor, y(pricePath[0]));
-    for (let i = 0; i < lowerBand.length; i++) {
-      ctx.lineTo(dayToX(i + 1), y(lowerBand[i]));
+    ctx.moveTo(lowerPoints[0].x, lowerPoints[0].y);
+    for (let i = 0; i < lowerPoints.length - 1; i++) {
+      const p0 = lowerPoints[i - 1] || lowerPoints[i];
+      const p1 = lowerPoints[i];
+      const p2 = lowerPoints[i + 1];
+      const p3 = lowerPoints[i + 2] || p2;
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
     }
     ctx.stroke();
     ctx.restore();
