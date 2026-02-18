@@ -1,12 +1,12 @@
 /**
- * FRACTAL RESEARCH TERMINAL v4
- * Institutional-grade pattern analysis interface
+ * FRACTAL RESEARCH TERMINAL v5
+ * BLOCK 70.2 STEP 2 — Real Horizon Binding
  * 
  * Features:
- * - Price Chart with Aftermath-Driven Forecast
- * - Fractal Overlay with Distribution Fan (P10-P90)
- * - P1.4: Volatility Regime Intelligence
- * - P1.6: Sizing Breakdown (transparent risk scaling)
+ * - HorizonSelector controls entire terminal state
+ * - useFocusPack hook for focus-specific data
+ * - Full redraw on horizon change
+ * - Tier-based UI (TIMING/TACTICAL/STRUCTURE)
  */
 
 import React, { useState, useEffect } from 'react';
@@ -16,6 +16,9 @@ import { StrategyPanel } from '../components/fractal/sections/StrategyPanel';
 import ForwardPerformancePanel from '../components/fractal/ForwardPerformancePanel';
 import { VolatilityCard } from '../components/fractal/VolatilityCard';
 import { SizingBreakdown } from '../components/fractal/SizingBreakdown';
+import { HorizonSelector, HorizonPills } from '../components/fractal/HorizonSelector';
+import { FocusInfoPanel, FocusStatsBadge } from '../components/fractal/FocusInfoPanel';
+import { useFocusPack, HORIZONS, getTierColor, getTierLabel } from '../hooks/useFocusPack';
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL || '';
 
@@ -51,34 +54,233 @@ const ChartModeSwitcher = ({ mode, onModeChange }) => {
 };
 
 // ═══════════════════════════════════════════════════════════════
+// FOCUS-AWARE FORECAST DISPLAY
+// ═══════════════════════════════════════════════════════════════
+
+const ForecastSummary = ({ forecast, meta }) => {
+  if (!forecast || !meta) return null;
+  
+  const { path, upperBand, lowerBand, markers, currentPrice } = forecast;
+  const lastIdx = path.length - 1;
+  
+  // Calculate expected returns
+  const p50Return = lastIdx >= 0 && currentPrice 
+    ? ((path[lastIdx] - currentPrice) / currentPrice * 100).toFixed(1)
+    : '—';
+  const p90Return = lastIdx >= 0 && upperBand[lastIdx] && currentPrice
+    ? ((upperBand[lastIdx] - currentPrice) / currentPrice * 100).toFixed(1)
+    : '—';
+  const p10Return = lastIdx >= 0 && lowerBand[lastIdx] && currentPrice
+    ? ((lowerBand[lastIdx] - currentPrice) / currentPrice * 100).toFixed(1)
+    : '—';
+  
+  return (
+    <div className="bg-white rounded-lg border border-slate-200 p-4" data-testid="forecast-summary">
+      <div className="text-xs font-semibold text-slate-500 uppercase mb-3">
+        Expected Outcome ({meta.aftermathDays}d)
+      </div>
+      
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <div className="text-xs text-slate-400">P10 (Worst)</div>
+          <div className={`text-lg font-bold ${parseFloat(p10Return) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+            {p10Return}%
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-slate-400">P50 (Median)</div>
+          <div className={`text-lg font-bold ${parseFloat(p50Return) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+            {p50Return}%
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-slate-400">P90 (Best)</div>
+          <div className={`text-lg font-bold ${parseFloat(p90Return) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+            {p90Return}%
+          </div>
+        </div>
+      </div>
+      
+      {/* Markers */}
+      {markers && markers.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-slate-100">
+          <div className="text-xs text-slate-400 mb-2">Checkpoints</div>
+          <div className="flex gap-2 flex-wrap">
+            {markers.map((m, i) => (
+              <span 
+                key={i}
+                className="px-2 py-1 bg-slate-100 rounded text-xs text-slate-600"
+              >
+                {m.horizon}: {(m.expectedReturn * 100).toFixed(1)}%
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+// DISTRIBUTION STATS
+// ═══════════════════════════════════════════════════════════════
+
+const DistributionStats = ({ overlay }) => {
+  if (!overlay?.stats) return null;
+  
+  const { stats } = overlay;
+  
+  return (
+    <div className="bg-white rounded-lg border border-slate-200 p-4" data-testid="distribution-stats">
+      <div className="text-xs font-semibold text-slate-500 uppercase mb-3">
+        Distribution Stats
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <div className="text-xs text-slate-400">Hit Rate</div>
+          <div className={`text-lg font-bold ${stats.hitRate > 0.5 ? 'text-green-600' : 'text-red-600'}`}>
+            {(stats.hitRate * 100).toFixed(0)}%
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-slate-400">Avg Max DD</div>
+          <div className="text-lg font-bold text-red-600">
+            -{(stats.avgMaxDD * 100).toFixed(1)}%
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-slate-400">P10 Return</div>
+          <div className={`text-lg font-bold ${stats.p10Return > 0 ? 'text-green-600' : 'text-red-600'}`}>
+            {(stats.p10Return * 100).toFixed(1)}%
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-slate-400">P90 Return</div>
+          <div className={`text-lg font-bold ${stats.p90Return > 0 ? 'text-green-600' : 'text-red-600'}`}>
+            {(stats.p90Return * 100).toFixed(1)}%
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MATCHES LIST
+// ═══════════════════════════════════════════════════════════════
+
+const MatchesList = ({ matches, focus }) => {
+  if (!matches || matches.length === 0) {
+    return (
+      <div className="bg-white rounded-lg border border-slate-200 p-4">
+        <div className="text-sm text-slate-400 text-center">No matches found</div>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="bg-white rounded-lg border border-slate-200 p-4" data-testid="matches-list">
+      <div className="text-xs font-semibold text-slate-500 uppercase mb-3">
+        Top Matches ({matches.length})
+      </div>
+      
+      <div className="space-y-2 max-h-64 overflow-y-auto">
+        {matches.slice(0, 10).map((m, i) => (
+          <div 
+            key={m.id || i}
+            className="flex items-center justify-between p-2 bg-slate-50 rounded hover:bg-slate-100 cursor-pointer transition-colors"
+            data-testid={`match-${i}`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-slate-400">#{i + 1}</span>
+              <span className="text-sm font-medium text-slate-700">{m.id}</span>
+              <span className={`text-xs px-1.5 py-0.5 rounded ${
+                m.phase === 'MARKUP' ? 'bg-green-100 text-green-700' :
+                m.phase === 'MARKDOWN' ? 'bg-red-100 text-red-700' :
+                m.phase === 'RECOVERY' ? 'bg-blue-100 text-blue-700' :
+                m.phase === 'DISTRIBUTION' ? 'bg-orange-100 text-orange-700' :
+                'bg-slate-100 text-slate-600'
+              }`}>
+                {m.phase}
+              </span>
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <span className="text-slate-400">
+                Sim: <span className="font-medium text-slate-600">{(m.similarity * 100).toFixed(0)}%</span>
+              </span>
+              <span className={`font-medium ${m.return > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {m.return > 0 ? '+' : ''}{(m.return * 100).toFixed(1)}%
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+// LOADING SKELETON
+// ═══════════════════════════════════════════════════════════════
+
+const LoadingSkeleton = () => (
+  <div className="animate-pulse" data-testid="loading-skeleton">
+    <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"/>
+    <div className="h-96 bg-slate-200 rounded mb-4"/>
+    <div className="grid grid-cols-3 gap-4">
+      <div className="h-32 bg-slate-200 rounded"/>
+      <div className="h-32 bg-slate-200 rounded"/>
+      <div className="h-32 bg-slate-200 rounded"/>
+    </div>
+  </div>
+);
+
+// ═══════════════════════════════════════════════════════════════
 // MAIN TERMINAL PAGE
 // ═══════════════════════════════════════════════════════════════
 
 const FractalTerminal = () => {
   const [chartMode, setChartMode] = useState('price');
+  const [focus, setFocus] = useState('30d');
   const [terminalData, setTerminalData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [terminalLoading, setTerminalLoading] = useState(true);
   const symbol = 'BTC';
+  
+  // BLOCK 70.2: Use focus-specific data
+  const { 
+    data: focusData, 
+    loading: focusLoading, 
+    error: focusError,
+    meta,
+    overlay,
+    forecast,
+    diagnostics,
+    matchesCount
+  } = useFocusPack(symbol, focus);
 
-  // Fetch full terminal data
+  // Fetch legacy terminal data (for volatility, sizing, etc.)
   useEffect(() => {
-    setLoading(true);
-    fetch(`${API_BASE}/api/fractal/v2.1/terminal?symbol=${symbol}&set=extended&focus=30d`)
+    setTerminalLoading(true);
+    fetch(`${API_BASE}/api/fractal/v2.1/terminal?symbol=${symbol}&set=extended&focus=${focus}`)
       .then(r => r.json())
       .then(d => {
         setTerminalData(d);
-        setLoading(false);
+        setTerminalLoading(false);
       })
       .catch(err => {
         console.error('[Terminal] Fetch error:', err);
-        setLoading(false);
+        setTerminalLoading(false);
       });
-  }, [symbol]);
+  }, [symbol, focus]);
 
   const volatility = terminalData?.volatility;
   const sizing = terminalData?.decisionKernel?.sizing;
   const consensus = terminalData?.decisionKernel?.consensus;
   const conflict = terminalData?.decisionKernel?.conflict;
+  
+  const isLoading = focusLoading || terminalLoading;
+  const tierColor = meta ? getTierColor(meta.tier) : '#6B7280';
 
   return (
     <div className="min-h-screen bg-slate-50" data-testid="fractal-terminal">
@@ -91,9 +293,12 @@ const FractalTerminal = () => {
               <span className="px-2 py-1 bg-slate-100 rounded text-xs font-medium text-slate-600">
                 {symbol}
               </span>
+              {meta && (
+                <FocusStatsBadge meta={meta} overlay={overlay} />
+              )}
             </div>
             <div className="text-xs text-slate-400">
-              v4 · Institutional Grade
+              v5 · Institutional Grade · BLOCK 70.2
             </div>
           </div>
         </div>
@@ -101,23 +306,71 @@ const FractalTerminal = () => {
       
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-6">
+        {/* BLOCK 70.2: Horizon Selector - Controls EVERYTHING */}
+        <div className="mb-6">
+          <HorizonSelector 
+            focus={focus}
+            onFocusChange={setFocus}
+            loading={isLoading}
+          />
+        </div>
+        
+        {/* Focus Info Panel */}
+        {meta && (
+          <div className="mb-4">
+            <FocusInfoPanel meta={meta} diagnostics={diagnostics} overlay={overlay} />
+          </div>
+        )}
+        
         {/* Chart Section */}
         <div className="bg-white rounded-xl border border-slate-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-slate-800">Research Canvas</h2>
-            <ChartModeSwitcher mode={chartMode} onModeChange={setChartMode} />
+            <div className="flex items-center gap-4">
+              <ChartModeSwitcher mode={chartMode} onModeChange={setChartMode} />
+            </div>
           </div>
           
           {/* Chart Render based on mode */}
           <div className="min-h-[450px]">
-            {chartMode === 'price' && (
-              <FractalMainChart symbol={symbol} width={1100} height={420} />
-            )}
-            
-            {chartMode === 'fractal' && (
-              <FractalOverlaySection symbol={symbol} />
+            {isLoading ? (
+              <LoadingSkeleton />
+            ) : (
+              <>
+                {chartMode === 'price' && (
+                  <FractalMainChart 
+                    symbol={symbol} 
+                    width={1100} 
+                    height={420}
+                    focus={focus}
+                    focusPack={focusData}
+                  />
+                )}
+                
+                {chartMode === 'fractal' && (
+                  <FractalOverlaySection 
+                    symbol={symbol}
+                    focus={focus}
+                    focusPack={focusData}
+                  />
+                )}
+              </>
             )}
           </div>
+
+          {/* BLOCK 70.2: Focus-specific panels */}
+          {!isLoading && focusData && (
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Forecast Summary */}
+              <ForecastSummary forecast={forecast} meta={meta} />
+              
+              {/* Distribution Stats */}
+              <DistributionStats overlay={overlay} />
+              
+              {/* Matches List */}
+              <MatchesList matches={overlay?.matches} focus={focus} />
+            </div>
+          )}
 
           {/* P1.4: Volatility Regime Card - Under Chart */}
           {volatility && (
@@ -179,40 +432,34 @@ const FractalTerminal = () => {
                   <div className="flex items-baseline gap-2">
                     <span className={`text-lg font-bold px-2 py-0.5 rounded ${
                       volatility.regime === 'LOW' ? 'bg-green-100 text-green-700' :
-                      volatility.regime === 'NORMAL' ? 'bg-gray-100 text-gray-700' :
-                      volatility.regime === 'HIGH' ? 'bg-yellow-100 text-yellow-700' :
-                      volatility.regime === 'EXPANSION' ? 'bg-orange-100 text-orange-700' :
+                      volatility.regime === 'NORMAL' ? 'bg-blue-100 text-blue-700' :
+                      volatility.regime === 'HIGH' ? 'bg-orange-100 text-orange-700' :
+                      volatility.regime === 'EXPANSION' ? 'bg-purple-100 text-purple-700' :
                       'bg-red-100 text-red-700'
                     }`}>
                       {volatility.regime}
                     </span>
-                    <span className="text-sm text-gray-500">×{volatility.policy?.sizeMultiplier?.toFixed(2)}</span>
+                    <span className="text-sm text-gray-500">RV30: {(volatility.rv30 * 100).toFixed(0)}%</span>
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
-                    RV30: {(volatility.rv30 * 100).toFixed(1)}% | Z: {volatility.volZScore?.toFixed(1)}
+                    Z-Score: {volatility.zScore?.toFixed(2)} | ATR Pctl: {volatility.atrPctl?.toFixed(0)}%
                   </div>
                 </div>
               )}
             </div>
           )}
-          
-          {/* Strategy Engine Panel */}
+        </div>
+        
+        {/* Strategy Panel */}
+        <div className="mt-6">
           <StrategyPanel symbol={symbol} />
-          
-          {/* Forward Performance Panel (BLOCK 56.5) */}
+        </div>
+        
+        {/* Forward Performance Panel */}
+        <div className="mt-6">
           <ForwardPerformancePanel />
         </div>
       </main>
-      
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white mt-8">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Fractal Research Terminal v4 · API v2.1</span>
-            <span>Aftermath-Driven Forecast · Distribution Fan (P10-P90)</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
