@@ -1,68 +1,69 @@
 # Fractal Research Terminal — PRD
 
 ## Original Problem Statement
-Build a full-stack financial trading decision engine with:
-- React frontend + Fastify (TypeScript) backend + MongoDB
-- "Hedge-fund style" institutional-grade risk and decision system
-- Admin panel for monitoring and configuration
+Поднять фронт, бэк и базу данных MongoDB с админкой для разработки. Бэк касается только логики. Фрактал - это изолированный модуль, полностью настроен.
+Репозиторий: https://github.com/Shillmaster/Finade3
 
 ## Core Architecture
 ```
 /app
-├── backend (Fastify + TypeScript)
-│   └── src/modules/fractal/
-│       ├── adaptive/      # Adaptive Regime Stack
-│       ├── volatility/    # Volatility calculation & attribution
-│       ├── strategy/resolver/  # Decision kernel
-│       └── api/           # REST endpoints
-└── frontend (React)
-    └── src/features/fractal/
-        ├── user/          # Main dashboard
-        └── admin/         # Admin panel
+├── backend (FastAPI proxy → Fastify TypeScript)
+│   ├── server.py              # Python proxy (port 8001)
+│   └── src/
+│       ├── app.fractal.ts     # Isolated Fractal entrypoint (port 8002)
+│       └── modules/fractal/   # Fractal business logic
+└── frontend (React + Craco)
+    └── src/
+        ├── pages/FractalPage.js
+        └── pages/FractalAdminPage.js
 ```
 
-## Implemented Features
+## What's Been Implemented
 
-### P1.1-P1.3: Decision Kernel ✅
-- Consensus Index calculation
-- Conflict Policy resolution
-- Sizing Policy implementation
+### 2026-02-18 — Initial Setup Complete
+- ✅ Cloned GitHub repository Finade3
+- ✅ Configured MongoDB connection (MONGO_URL → MONGODB_URI)
+- ✅ Installed backend dependencies (npm)
+- ✅ Installed frontend dependencies (yarn)
+- ✅ TypeScript backend running (Fastify on port 8002)
+- ✅ Bootstrap data loaded: 5694 candles (2010-2026)
+- ✅ Frontend compiled and running
 
-### P1.4: Volatility Regime Modifier ✅
-- `volatility.calculator.ts` — RV30, RV90, ATR, Z-Score
-- `volatility.regime.service.ts` — regime classification
-- `VolatilityCard.jsx` — UI component
+## Working Features
 
-### PHASE 3 (BLOCKS 60-65): Adaptive Regime Stack ✅
-- `regime.context.service.ts` — market regime detection
-- `adaptive.horizon-weight.service.ts` — dynamic horizon weighting
-- `adaptive.threshold.service.ts` — entry threshold adjustment
-- `adaptive.conflict.service.ts` — regime-aware conflict resolution
-- `adaptive.sizing.service.ts` — final size calculation
+### Main Dashboard (/)
+- Fractal Research Terminal with BTC chart
+- Price Chart / Fractal Overlay modes
+- VOLATILITY card (Crisis mode: RV30 80.6%, RV90 55.9%)
+- SIZING BREAKDOWN table
 
-### P1.5: Volatility Attribution ✅
-- `volatility.attribution.service.ts` — performance metrics by regime
-- Admin API: `/api/fractal/v2.1/admin/volatility/attribution`
-- `VolatilityTab.jsx` — admin UI with Regime Timeline
+### Admin Panel (/admin/fractal)
+- **Overview Tab:**
+  - Governance: NORMAL, Contract: FROZEN
+  - System Health: 96% HEALTHY
+  - Catastrophic Guard: 4% OK
+  - Reliability: 75% WARN
+  - Tail Risk: P95 Max Drawdown 25.0%
+  - Performance Windows (30/60/90 Day)
 
-### P1.6: Sizing Breakdown ✅
-- Backend: `sizingBreakdown` array in `/terminal` response
-- `SizingBreakdown.jsx` — factor-by-factor display
+- **Volatility Tab:**
+  - Volatility Attribution: OK
+  - Sample Period: 2025-11-20 → 2026-02-17
+  - Regime Timeline (90 days): LOW/NORMAL/HIGH/EXPANSION/CRISIS
+  - Protection Report
+  - Performance by Regime table
 
 ## API Endpoints
+- `GET /api/health` — proxy health
+- `GET /api/fractal/health` — fractal module health + bootstrap status
 - `GET /api/fractal/v2.1/terminal` — main decision data
-- `GET /api/fractal/v2.1/admin/volatility/attribution` — performance attribution
-- `GET /api/fractal/v2.1/admin/volatility/timeline` — regime timeline
+- `GET /api/fractal/v2.1/admin/volatility/attribution` — volatility attribution
 
-## Database Schema (SignalSnapshotModel)
-```typescript
-{
-  volatility: { regime, rv30, rv90, atr14Pct, zScore },
-  sizingBreakdown: { baseSize, consensusMult, conflictMult, volMult, finalSize },
-  rawDecision: { direction, confidence },
-  outcomes: { d7: { realizedReturn }, ... }
-}
-```
+## Tech Stack
+- **Backend:** FastAPI (Python proxy) → Fastify (TypeScript)
+- **Frontend:** React 19 + Craco + Tailwind CSS
+- **Database:** MongoDB
+- **Charts:** Recharts, Lightweight Charts
 
 ## Prioritized Backlog
 
@@ -78,9 +79,9 @@ Build a full-stack financial trading decision engine with:
 - [ ] PHASE 4 - Cycle Engine (Bitcoin halving context)
 
 ## Access
-- **URL:** https://adaptive-regime.preview.emergentagent.com
+- **URL:** https://fullstack-sandbox.preview.emergentagent.com
+- **Admin:** /admin/fractal
 - **Auth:** Not required (open access)
-- **Admin:** `/admin/fractal`
 
 ## Last Updated
-2026-02-17 — P1.6 Sizing Breakdown completed, visual verification done
+2026-02-18 — Initial setup and deployment complete
