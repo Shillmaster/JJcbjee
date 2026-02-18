@@ -515,4 +515,153 @@ const styles = {
   },
 };
 
+/**
+ * BLOCK 73.4 — Interactive Match Picker
+ * 
+ * Shows top matches as clickable chips.
+ * Clicking switches the replay line and recalculates divergence.
+ */
+function MatchPicker({ matches, selectedId, primaryId, onSelect, loading }) {
+  const topMatches = matches.slice(0, 5);
+  
+  return (
+    <div style={matchPickerStyles.container}>
+      <div style={matchPickerStyles.label}>
+        <span style={matchPickerStyles.labelText}>SELECT REPLAY</span>
+        {loading && <span style={matchPickerStyles.loading}>Loading...</span>}
+      </div>
+      <div style={matchPickerStyles.chips}>
+        {topMatches.map((match, idx) => {
+          const isSelected = match.id === selectedId;
+          const isPrimary = match.id === primaryId;
+          
+          return (
+            <button
+              key={match.id}
+              data-testid={`match-chip-${idx}`}
+              onClick={() => onSelect(match.id)}
+              style={{
+                ...matchPickerStyles.chip,
+                backgroundColor: isSelected ? '#000' : (isPrimary ? '#f0fdf4' : '#fff'),
+                color: isSelected ? '#fff' : '#000',
+                borderColor: isSelected ? '#000' : (isPrimary ? '#22c55e' : '#e6e6e6'),
+                fontWeight: isSelected ? 600 : 400,
+              }}
+            >
+              <span style={matchPickerStyles.chipRank}>#{idx + 1}</span>
+              <span style={matchPickerStyles.chipDate}>{match.id}</span>
+              <span style={{
+                ...matchPickerStyles.chipSim,
+                color: isSelected ? 'rgba(255,255,255,0.7)' : '#888'
+              }}>
+                {(match.similarity * 100).toFixed(0)}%
+              </span>
+              <span style={{
+                ...matchPickerStyles.chipPhase,
+                backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : getPhaseColor(match.phase),
+                color: isSelected ? '#fff' : getPhaseTextColor(match.phase),
+              }}>
+                {match.phase.slice(0, 3).toUpperCase()}
+              </span>
+              {isPrimary && !isSelected && (
+                <span style={matchPickerStyles.primaryBadge}>AUTO</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function getPhaseColor(phase) {
+  const colors = {
+    'ACCUMULATION': '#dcfce7',
+    'RECOVERY': '#cffafe',
+    'DISTRIBUTION': '#fef3c7',
+    'MARKDOWN': '#fce7f3',
+  };
+  return colors[phase] || '#f4f4f5';
+}
+
+function getPhaseTextColor(phase) {
+  const colors = {
+    'ACCUMULATION': '#166534',
+    'RECOVERY': '#0891b2',
+    'DISTRIBUTION': '#b45309',
+    'MARKDOWN': '#9d174d',
+  };
+  return colors[phase] || '#444';
+}
+
+const matchPickerStyles = {
+  container: {
+    padding: '12px 16px',
+    borderTop: '1px solid #EAEAEA',
+    backgroundColor: '#FAFAFA',
+  },
+  label: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  labelText: {
+    fontSize: 10,
+    fontWeight: 600,
+    color: '#888',
+    letterSpacing: '0.5px',
+  },
+  loading: {
+    fontSize: 10,
+    color: '#8b5cf6',
+    fontStyle: 'italic',
+  },
+  chips: {
+    display: 'flex',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  chip: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    padding: '6px 10px',
+    border: '1px solid',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontSize: 11,
+    transition: 'all 0.15s ease',
+    position: 'relative',
+  },
+  chipRank: {
+    fontWeight: 700,
+    fontSize: 10,
+  },
+  chipDate: {
+    fontFamily: 'monospace',
+    fontSize: 10,
+  },
+  chipSim: {
+    fontSize: 10,
+  },
+  chipPhase: {
+    fontSize: 8,
+    padding: '2px 4px',
+    borderRadius: 3,
+    fontWeight: 600,
+  },
+  primaryBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -4,
+    fontSize: 7,
+    padding: '1px 4px',
+    backgroundColor: '#22c55e',
+    color: '#fff',
+    borderRadius: 3,
+    fontWeight: 700,
+  },
+};
+
 export default FractalHybridChart;
