@@ -109,12 +109,6 @@ export async function buildFocusPack(
     timestamps: currentTimestamps,
   };
   
-  // Build forecast pack
-  const forecast = buildForecastPack(overlay, currentPrice, focus);
-  
-  // Build diagnostics
-  const diagnostics = buildDiagnostics(matchResult, overlay, allCandles);
-  
   // BLOCK 73.1: Select Primary Match using weighted scoring
   const selectionResult = selectPrimaryMatch(overlay.matches, focus);
   const primarySelection: PrimarySelection = {
@@ -122,6 +116,20 @@ export async function buildFocusPack(
     candidateCount: selectionResult.candidateCount,
     selectionMethod: selectionResult.selectionMethod,
   };
+  
+  // BLOCK 73.3: Build Unified Path (single source of truth)
+  const unifiedPath = buildUnifiedPath(
+    currentPrice,
+    cfg.aftermathDays,
+    overlay.distributionSeries,
+    selectionResult.primaryMatch
+  );
+  
+  // Build forecast pack with unified path
+  const forecast = buildForecastPackFromUnified(unifiedPath, overlay, currentPrice, focus);
+  
+  // Build diagnostics
+  const diagnostics = buildDiagnostics(matchResult, overlay, allCandles);
   
   const meta: FocusPackMeta = {
     symbol,
@@ -134,24 +142,32 @@ export async function buildFocusPack(
   };
   
   // BLOCK 73.1.1: Build normalized series for STRUCTURE % mode
-  const normalizedSeries = buildNormalizedSeries(
-    forecast,
-    selectionResult.primaryMatch,
+  const normalizedSeries = buildNormalizedSeriesFromUnified(
+    unifiedPath,
     currentPrice,
     tier
   );
   
-  // BLOCK 73.2: Calculate divergence between synthetic and replay
-  const divergence = buildDivergenceMetrics(
-    forecast,
-    selectionResult.primaryMatch,
+  // BLOCK 73.2: Calculate divergence using unified paths
+  const divergence = buildDivergenceFromUnified(
+    unifiedPath,
     currentPrice,
     cfg.aftermathDays,
     tier,
     normalizedSeries.mode
   );
   
-  return { meta, overlay, forecast, diagnostics, primarySelection, normalizedSeries, divergence };
+  return { 
+    meta, 
+    overlay, 
+    forecast, 
+    diagnostics, 
+    primarySelection, 
+    normalizedSeries, 
+    divergence,
+    // BLOCK 73.3: Include unified path for frontend
+    unifiedPath 
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════
