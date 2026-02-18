@@ -108,6 +108,31 @@ export interface FocusPackDiagnostics {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// PRIMARY MATCH (BLOCK 73.1)
+// ═══════════════════════════════════════════════════════════════
+
+export interface PrimaryMatchScores {
+  similarity: number;          // Raw similarity (0..1)
+  volatilityAlignment: number; // How well volatility matches (0..1)
+  stabilityScore: number;      // Pattern stability (0..1)
+  outcomeQuality: number;      // Risk-adjusted aftermath quality (0..1)
+  recencyBonus: number;        // Recency factor (0..1)
+}
+
+export interface PrimaryMatch extends OverlayMatch {
+  selectionScore: number;        // Composite weighted score (0..1)
+  selectionRank: number;         // 1 = best
+  scores: PrimaryMatchScores;
+  selectionReason: string;
+}
+
+export interface PrimarySelection {
+  primaryMatch: PrimaryMatch | null;
+  candidateCount: number;
+  selectionMethod: 'WEIGHTED_SCORE' | 'FALLBACK_FIRST' | 'NO_CANDIDATES';
+}
+
+// ═══════════════════════════════════════════════════════════════
 // MAIN FOCUS PACK
 // ═══════════════════════════════════════════════════════════════
 
@@ -116,6 +141,9 @@ export interface FocusPack {
   overlay: OverlayPack;
   forecast: ForecastPack;
   diagnostics: FocusPackDiagnostics;
+  
+  // BLOCK 73.1: Primary Match Selection
+  primarySelection?: PrimarySelection;
 }
 
 // ═══════════════════════════════════════════════════════════════
