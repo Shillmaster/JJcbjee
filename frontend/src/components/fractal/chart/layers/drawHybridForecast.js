@@ -200,7 +200,7 @@ export function drawHybridForecast(
   ctx.fillText('Synthetic', legendX + 10, legendY + 3);
   
   // Replay legend
-  if (replayPath.length > 0) {
+  if (replayData.length > 0) {
     ctx.fillStyle = '#8b5cf6';
     ctx.beginPath();
     ctx.arc(legendX, legendY + 16, 4, 0, Math.PI * 2);
@@ -218,35 +218,78 @@ export function drawHybridForecast(
   
   ctx.restore();
   
-  // === 8. INTERMEDIATE HORIZON MARKERS (BLOCK 73.3 — 14D Continuity Fix) ===
-  // Draw markers for sub-horizons (e.g., 7d on 14d trajectory)
-  const displayMarkers = markers.length > 0 
-    ? markers.filter(m => (m.day || m.dayIndex + 1) < N) // Only intermediate markers
+  // === 8. INTERMEDIATE HORIZON MARKERS (BLOCK 73.3 — Unified Path) ===
+  // Markers now come directly from unifiedPath (single source of truth)
+  const unifiedMarkers = unifiedPath?.markers || {};
+  const markerKeys = Object.keys(unifiedMarkers).filter(k => {
+    const m = unifiedMarkers[k];
+    return m && m.t > 0 && m.t < N; // Only intermediate markers
+  });
+  
+  // Fallback to legacy markers if no unified markers
+  const legacyMarkers = markers.length > 0 
+    ? markers.filter(m => (m.day || m.dayIndex + 1) < N)
     : forecast?.markers?.filter(m => (m.day || m.dayIndex + 1) < N) || [];
   
-  displayMarkers.forEach(marker => {
-    const day = marker.day || (marker.dayIndex + 1);
-    const price = marker.price || pricePath[Math.min(day - 1, N - 1)];
-    if (!price || day >= N) return;
-    
-    const mx = dayToX(day);
-    const my = y(price);
-    
-    // Calculate alpha for confidence decay effect
-    const progress = day / N;
-    const markerAlpha = 1 - progress * 0.2;
-    
-    // Circle marker (smaller than endpoint)
-    ctx.save();
-    ctx.fillStyle = `rgba(22, 163, 74, ${markerAlpha * 0.8})`;
-    ctx.beginPath();
-    ctx.arc(mx, my, 4, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // White inner circle
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(mx, my, 2, 0, Math.PI * 2);
+  if (markerKeys.length > 0) {
+    // Use unified markers
+    markerKeys.forEach(key => {
+      const marker = unifiedMarkers[key];
+      const mx = dayToX(marker.t);
+      const my = y(marker.price);
+      
+      // Calculate alpha for confidence decay effect
+      const progress = marker.t / N;
+      const markerAlpha = 1 - progress * 0.2;
+      
+      // Circle marker (smaller than endpoint)
+      ctx.save();
+      ctx.fillStyle = `rgba(22, 163, 74, ${markerAlpha * 0.8})`;
+      ctx.beginPath();
+      ctx.arc(mx, my, 4, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // White inner circle
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(mx, my, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      
+      // Horizon label
+      ctx.save();
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.4 + markerAlpha * 0.2})`;
+      ctx.font = "bold 9px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText(marker.horizon, mx, my - 10);
+      ctx.restore();
+    });
+  } else {
+    // Fallback to legacy markers
+    legacyMarkers.forEach(marker => {
+      const day = marker.day || (marker.dayIndex + 1);
+      const price = marker.price || syntheticData[day]?.price;
+      if (!price || day >= N) return;
+      
+      const mx = dayToX(day);
+      const my = y(price);
+      
+      // Calculate alpha for confidence decay effect
+      const progress = day / N;
+      const markerAlpha = 1 - progress * 0.2;
+      
+      // Circle marker (smaller than endpoint)
+      ctx.save();
+      ctx.fillStyle = `rgba(22, 163, 74, ${markerAlpha * 0.8})`;
+      ctx.beginPath();
+      ctx.arc(mx, my, 4, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // White inner circle
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(mx, my, 2, 0, Math.PI * 2);
+      ctx.fill();
     ctx.fill();
     ctx.restore();
     
