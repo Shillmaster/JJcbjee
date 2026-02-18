@@ -1,6 +1,7 @@
 /**
- * BLOCK 50 — Snapshot Timeline (Improved UI)
- * Shows recent reliability snapshots with better visualization
+ * BLOCK 50 — Snapshot Timeline
+ * English: titles, metric names
+ * Russian: only in tooltips
  */
 
 import React from 'react';
@@ -32,13 +33,13 @@ export function SnapshotTimeline({ recent }) {
   
   // Calculate trend
   const getTrend = () => {
-    if (snapshots.length < 2) return { text: 'Недостаточно данных', color: 'text-gray-500' };
-    const recent = snapshots.slice(0, 3).reduce((s, snap) => s + snap.reliability, 0) / 3;
-    const older = snapshots.slice(-3).reduce((s, snap) => s + snap.reliability, 0) / 3;
-    const diff = recent - older;
-    if (diff > 0.05) return { text: 'Растёт', color: 'text-green-600', icon: '↑' };
-    if (diff < -0.05) return { text: 'Падает', color: 'text-red-600', icon: '↓' };
-    return { text: 'Стабильно', color: 'text-gray-600', icon: '→' };
+    if (snapshots.length < 2) return { text: 'N/A', color: 'text-gray-500', icon: '—' };
+    const recent3 = snapshots.slice(0, 3).reduce((s, snap) => s + snap.reliability, 0) / 3;
+    const older3 = snapshots.slice(-3).reduce((s, snap) => s + snap.reliability, 0) / 3;
+    const diff = recent3 - older3;
+    if (diff > 0.05) return { text: 'UP', color: 'text-green-600', icon: '↑' };
+    if (diff < -0.05) return { text: 'DOWN', color: 'text-red-600', icon: '↓' };
+    return { text: 'STABLE', color: 'text-gray-600', icon: '→' };
   };
   const trend = getTrend();
   
@@ -50,25 +51,25 @@ export function SnapshotTimeline({ recent }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Recent Activity</h3>
+          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">RECENT ACTIVITY</h3>
           <InfoTooltip {...FRACTAL_TOOLTIPS.recentActivity} placement="right" />
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100">
           <History className="w-4 h-4 text-gray-600" />
-          <span className="text-sm font-bold text-gray-600">{snapshots.length} дней</span>
+          <span className="text-sm font-bold text-gray-600">{snapshots.length} days</span>
         </div>
       </div>
       
       {/* Summary Stats */}
       <div className="grid grid-cols-2 gap-3 mb-5">
         <div className="p-3 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 uppercase mb-1">Средняя надёжность</p>
+          <p className="text-xs text-gray-500 uppercase mb-1">Avg Reliability</p>
           <p className={`text-2xl font-bold ${avgReliability >= 0.7 ? 'text-green-600' : avgReliability >= 0.5 ? 'text-amber-600' : 'text-red-600'}`}>
             {(avgReliability * 100).toFixed(0)}%
           </p>
         </div>
         <div className="p-3 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 uppercase mb-1">Тренд</p>
+          <p className="text-xs text-gray-500 uppercase mb-1">Trend</p>
           <p className={`text-lg font-bold ${trend.color}`}>
             {trend.icon} {trend.text}
           </p>
@@ -77,7 +78,7 @@ export function SnapshotTimeline({ recent }) {
       
       {/* Chart */}
       <div className="mb-6">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Надёжность (7 дней)</p>
+        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">RELIABILITY (7 DAYS)</p>
         <div className="relative">
           {/* Background grid */}
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
@@ -126,7 +127,7 @@ export function SnapshotTimeline({ recent }) {
       {/* Audit Log */}
       {audit && audit.length > 0 && (
         <div>
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Журнал действий</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">AUDIT LOG</p>
           <div className="space-y-2 max-h-40 overflow-y-auto">
             {audit.slice(0, 5).map((entry, i) => {
               const actionConfig = actionColors[entry.action] || actionColors.DEFAULT;
@@ -140,7 +141,7 @@ export function SnapshotTimeline({ recent }) {
                   <div className="flex items-center gap-2 text-gray-400 min-w-[70px]">
                     <Clock className="w-3 h-3" />
                     <span className="text-xs font-mono">
-                      {new Date(entry.ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(entry.ts).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                   
