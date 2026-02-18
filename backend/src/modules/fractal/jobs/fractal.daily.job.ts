@@ -325,13 +325,12 @@ export class FractalDailyJobService {
         startedAt: new Date(),
         status: 'RUNNING'
       };
-      context.steps.push(step4);
+      context.steps.push(step5);
       
       try {
-        console.log(`[DailyJob] Step 4: Writing audit log...`);
+        console.log(`[DailyJob] Step 5: Writing audit log...`);
         
         // In production, write to MongoDB audit collection
-        // For now, just log
         const auditEntry = {
           type: 'DAILY_FORWARD_RUN',
           runId,
@@ -340,19 +339,20 @@ export class FractalDailyJobService {
           snapshot: snapshotResult,
           resolve: resolveResult,
           equityRebuilt,
+          alerts: alertsResult,
           errors,
           durationMs: Date.now() - startedAt.getTime()
         };
         
         console.log(`[DailyJob] Audit:`, JSON.stringify(auditEntry));
         
-        step4.result = auditEntry;
-        step4.status = 'SUCCESS';
-        step4.completedAt = new Date();
+        step5.result = auditEntry;
+        step5.status = 'SUCCESS';
+        step5.completedAt = new Date();
       } catch (err: any) {
-        step4.status = 'FAILED';
-        step4.error = err.message;
-        step4.completedAt = new Date();
+        step5.status = 'FAILED';
+        step5.error = err.message;
+        step5.completedAt = new Date();
         errors.push(`AUDIT_LOG: ${err.message}`);
       }
       
