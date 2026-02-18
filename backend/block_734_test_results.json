@@ -1,0 +1,80 @@
+{
+  "summary": {
+    "tests_run": 4,
+    "tests_passed": 0,
+    "success_rate": 0.0
+  },
+  "test_results": [
+    {
+      "test": "BLOCK 73.3: UnifiedPath with syntheticPath[0]=NOW",
+      "success": false,
+      "timestamp": "2026-02-18T15:31:25.831500",
+      "status_code": 404,
+      "response_data": {
+        "raw_response": "404 page not found\n"
+      },
+      "headers": {
+        "Date": "Wed, 18 Feb 2026 15:31:25 GMT",
+        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Length": "19",
+        "Connection": "keep-alive",
+        "Server": "cloudflare",
+        "CF-Ray": "9cfe92457817acb1-ORD",
+        "CF-Cache-Status": "DYNAMIC",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Via": "1.1 google",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
+        "Access-Control-Max-Age": "300",
+        "x-content-type-options": "nosniff",
+        "Set-Cookie": "__cf_bm=GG9OgzbGAki7iYtSWLKCWcCF7iQdeonB3ZveO80kWsg-1771428685-1.0.1.1-cYJ257dvB18x0QaFsF5HknYT8Afa.f0qS5aPZ1h7TzCFjCktzhSh_1sGsAXcMgKqRJiZxAtzl1_I_JM9ezh21fiHLwouMcbgf2iVu6gBHwY; path=/; expires=Wed, 18-Feb-26 16:01:25 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
+        "Vary": "Accept-Encoding"
+      }
+    },
+    {
+      "test": "BLOCK 73.4: Replay Pack Endpoint",
+      "success": false,
+      "timestamp": "2026-02-18T15:31:26.461304",
+      "error": "Failed to get focus pack for match ID"
+    },
+    {
+      "test": "BLOCK 73.4: Multiple Match Replay Packs",
+      "success": false,
+      "timestamp": "2026-02-18T15:31:27.087180",
+      "error": "Failed to get focus pack for matches"
+    },
+    {
+      "test": "BLOCK 73.4: Replay Pack Error Handling",
+      "success": false,
+      "timestamp": "2026-02-18T15:31:28.233408",
+      "error_tests": [
+        {
+          "name": "Missing matchId",
+          "expected_error": "MATCH_ID_REQUIRED",
+          "actual_error": null,
+          "success": false
+        },
+        {
+          "name": "Invalid symbol",
+          "expected_error": "BTC_ONLY",
+          "actual_error": null,
+          "success": false
+        },
+        {
+          "name": "Invalid focus",
+          "expected_error": "INVALID_HORIZON",
+          "actual_error": null,
+          "success": false
+        },
+        {
+          "name": "Non-existent matchId",
+          "expected_error": "MATCH_NOT_FOUND",
+          "actual_error": null,
+          "success": false
+        }
+      ]
+    }
+  ],
+  "timestamp": "2026-02-18T15:31:28.735028"
+}
