@@ -139,7 +139,17 @@ export async function buildFocusPack(
     tier
   );
   
-  return { meta, overlay, forecast, diagnostics, primarySelection, normalizedSeries };
+  // BLOCK 73.2: Calculate divergence between synthetic and replay
+  const divergence = buildDivergenceMetrics(
+    forecast,
+    selectionResult.primaryMatch,
+    currentPrice,
+    cfg.aftermathDays,
+    tier,
+    normalizedSeries.mode
+  );
+  
+  return { meta, overlay, forecast, diagnostics, primarySelection, normalizedSeries, divergence };
 }
 
 // ═══════════════════════════════════════════════════════════════
