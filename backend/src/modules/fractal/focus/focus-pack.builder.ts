@@ -1,5 +1,6 @@
 /**
  * BLOCK 70.2 — FocusPack Builder (Real Horizon Binding)
+ * BLOCK 73.3 — Unified Path Integration
  * 
  * Builds focus-specific overlay and forecast data.
  * Each focus horizon gets DIFFERENT:
@@ -30,6 +31,7 @@ import {
 } from './focus.types.js';
 import { selectPrimaryMatch } from '../match/primary-selector.service.js';
 import { calculateDivergence } from '../engine/divergence.service.js';
+import { buildUnifiedPath, toLegacyForecast, type UnifiedPath } from '../path/unified-path.builder.js';
 
 // ═══════════════════════════════════════════════════════════════
 // FOCUS PACK BUILDER
