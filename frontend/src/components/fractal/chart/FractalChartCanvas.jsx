@@ -6,6 +6,7 @@ import { drawSMA } from "./layers/drawSMA";
 import { drawPhases } from "./layers/drawPhases";
 import { drawForecast } from "./layers/drawForecast";
 import { draw7dArrow } from "./layers/draw7dArrow";
+import { drawHybridForecast } from "./layers/drawHybridForecast";
 import { makeIndexXScale, makeYScale, paddedMinMax } from "./math/scale";
 
 function Tooltip({ candle, sma, phase }) {
