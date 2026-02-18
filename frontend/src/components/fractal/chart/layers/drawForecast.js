@@ -219,28 +219,27 @@ export function drawForecast(
     }
   }
 
-  // === 7. KEY DAY MARKERS (7d, 14d, 30d) ===
-  const keyDays = forecast.keyDays || [
-    { day: 7, price: pricePath[6] },
-    { day: 14, price: pricePath[13] },
-    { day: 30, price: pricePath[N - 1] }
-  ];
+  // === 7. KEY DAY MARKERS (dynamic from forecast.markers) ===
+  // BLOCK 70.2: Use markers from focusPack which are appropriate for current focus
+  const markers = forecast.markers || [];
   
-  const displayDays = [7, 14, 30];
+  // If no markers provided, fall back to calculating from pricePath
+  const displayMarkers = markers.length > 0 ? markers : [
+    { day: Math.min(7, N), horizon: '7d', price: pricePath[Math.min(6, N - 1)] },
+    { day: Math.min(14, N), horizon: '14d', price: pricePath[Math.min(13, N - 1)] },
+    { day: N, horizon: `${N}d`, price: pricePath[N - 1] }
+  ].filter(m => m.day <= N);
   
-  displayDays.forEach(day => {
-    const kd = keyDays.find(k => k.day === day);
-    const dayIndex = Math.min(day - 1, N - 1);
-    const price = kd?.price || pricePath[dayIndex];
-    if (!price) return;
+  displayMarkers.forEach(marker => {
+    const day = marker.day || (marker.dayIndex + 1);
+    const price = marker.price || pricePath[Math.min(day - 1, N - 1)];
+    if (!price || day > N) return;
     
-    // For day 30, use the exact last point position
-    const actualDay = day === 30 ? N : day;
-    const px = dayToX(actualDay);
+    const px = dayToX(day);
     const py = y(price);
     
     // Calculate alpha for confidence decay effect
-    const progress = day / 30;
+    const progress = day / N;
     const markerAlpha = 1 - progress * 0.3;
     
     // Circle marker
@@ -257,12 +256,13 @@ export function drawForecast(
     ctx.fill();
     ctx.restore();
     
-    // Day label
+    // Horizon label (use marker.horizon or calculate from day)
+    const label = marker.horizon || `${day}d`;
     ctx.save();
     ctx.fillStyle = `rgba(0, 0, 0, ${0.5 + markerAlpha * 0.2})`;
     ctx.font = "bold 10px system-ui";
     ctx.textAlign = "center";
-    ctx.fillText(`${day}d`, px, py - 12);
+    ctx.fillText(label, px, py - 12);
     ctx.restore();
   });
 
