@@ -63,6 +63,12 @@ export interface DailyJobResult {
   equity: {
     rebuilt: boolean;
   };
+  alerts: {
+    sent: number;
+    blocked: number;
+    quotaUsed: number;
+    quotaMax: number;
+  };
   errors: string[];
 }
 
