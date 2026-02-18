@@ -18,6 +18,9 @@
 import { snapshotWriterService } from '../lifecycle/snapshot.writer.service.js';
 import { outcomeResolverService } from '../lifecycle/outcome.resolver.service.js';
 import { forwardEquityService } from '../strategy/forward/forward.equity.service.js';
+import { runAlertEngine, type AlertEngineContext } from '../alerts/alert.engine.service.js';
+import { sendAlertsToTelegram } from '../alerts/alert.tg.adapter.js';
+import { getQuotaStatus } from '../alerts/alert.quota.service.js';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
