@@ -118,8 +118,7 @@ export async function registerAlertRoutes(app: FastifyInstance) {
     }
     
     // Run engine without saving or sending
-    const { evaluate } = await import('./alert.engine.service.js');
-    const events = await evaluate(body);
+    const events = await evaluateAlerts(body);
     
     return {
       ok: true,
