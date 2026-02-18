@@ -290,18 +290,18 @@ export function drawHybridForecast(
       ctx.beginPath();
       ctx.arc(mx, my, 2, 0, Math.PI * 2);
       ctx.fill();
-    ctx.fill();
-    ctx.restore();
-    
-    // Horizon label
-    const label = marker.horizon || `${day}d`;
-    ctx.save();
-    ctx.fillStyle = `rgba(0, 0, 0, ${0.4 + markerAlpha * 0.2})`;
-    ctx.font = "bold 9px system-ui";
-    ctx.textAlign = "center";
-    ctx.fillText(label, mx, my - 10);
-    ctx.restore();
-  });
+      ctx.restore();
+      
+      // Horizon label
+      const label = marker.horizon || `${day}d`;
+      ctx.save();
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.4 + markerAlpha * 0.2})`;
+      ctx.font = "bold 9px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText(label, mx, my - 10);
+      ctx.restore();
+    });
+  }
   
   // === 9. ENDPOINT HORIZON LABEL ===
   ctx.save();
