@@ -1,49 +1,65 @@
-# Fractal Terminal PRD — BLOCK 73.3 Complete
+# Fractal Terminal PRD — BLOCK 73.4 Complete
 
 ## What's Been Implemented
 
-### BLOCK 73.3 — 14D Continuity Fix ✅ (Feb 18, 2026)
+### BLOCK 73.4 — Interactive Match Replay ✅ (Feb 18, 2026)
 
-**Цель:** Убрать визуальный обрыв траектории при переключении 7D→14D, добавив промежуточные маркеры горизонтов.
+**Backend:**
+- New endpoint `/api/fractal/v2.1/replay-pack` returns replay data for specific match
+- `replay-pack.builder.ts` generates:
+  - replayPath from match aftermath (normalized to NOW)
+  - matchMeta (similarity, phase, score)
+  - outcomes at standard horizons (7d, 14d, etc.)
+  - divergence metrics vs synthetic
 
-**Frontend Changes:**
+**Frontend:**
+- `MatchPicker` component shows top 5 matches as clickable chips
+- Click on chip fetches `/api/fractal/v2.1/replay-pack`
+- Chart updates replay line (purple) to selected match
+- Divergence metrics recalculate for selected match
+- "AUTO" badge shows which match was auto-selected
 
-**`drawHybridForecast.js`:**
-- Добавлен параметр `markers` для отрисовки промежуточных маркеров
-- Новая секция "INTERMEDIATE HORIZON MARKERS" отрисовывает точки на sub-horizons (7d на 14d траектории)
-- Маркеры показывают визуальную continuity между горизонтами
+### BLOCK 73.3 — Unified Path Builder ✅ (Feb 18, 2026)
 
-**`FractalChartCanvas.jsx`:**
-- Передача `forecast?.markers` в `drawHybridForecast()` для continuity
+**Backend:**
+- `unified-path.builder.ts` creates single source of truth
+- syntheticPath: t=0..N (t=0 = NOW)
+- replayPath: same length, anchored to NOW
+- markers computed FROM syntheticPath (no discrepancies)
 
-**Результаты:**
-- 14D horizon теперь показывает маркер 7d на траектории
-- 30D horizon показывает маркеры 7d, 14d, 30d
-- Визуальная continuity между горизонтами достигнута
+**Frontend:**
+- `drawHybridForecast.js` updated to use unifiedPath
+- Fallback to legacy format for backward compat
+- Both synthetic and replay start from NOW (no breaks)
 
-### BLOCK 73.2 — Divergence Engine ✅ (Previous)
+---
 
-**Backend (`divergence.service.ts`):**
-- RMSE, MAPE, Correlation, TerminalDelta, DirectionalMismatch
-- Composite Score 0-100, Grades A/B/C/D/F
-- Warning flags
+### BLOCK 73.2 — Divergence Engine ✅
+- RMSE, MAPE, Correlation, TerminalDelta
+- Grades A/B/C/D/F with warnings
 
-**Frontend (`FractalHybridChart.jsx`):**
-- Grade badge, Details row, Warning chips
+### BLOCK 73.1 — Primary Match Selection ✅
+- Weighted scoring for match selection
 
-### BLOCK 73.1.1 — STRUCTURE % MODE ✅
-- Y-axis в % для 180D/365D horizons
-- NOW reference line
+---
 
-### BLOCK 73.1 — Primary Match Selection Engine ✅
-- Weighted scoring для выбора Primary Match
+## API Endpoints
+
+### GET /api/fractal/v2.1/focus-pack
+Returns complete FocusPack with unifiedPath
+
+### GET /api/fractal/v2.1/replay-pack
+**New (BLOCK 73.4)**
+- Query: `symbol`, `focus`, `matchId`
+- Returns: replayPack with replayPath, outcomes, divergence
 
 ---
 
 ## Prioritized Backlog
 
 ### P1 (Next)
-- [ ] Auto-penalty в sizing stack на основе divergence score
+- [ ] BLOCK 73.5 — Phase Shading Interactivity
+- [ ] Auto-penalty in sizing based on divergence
 
 ### P2
 - [ ] Tooltip component scores
@@ -53,29 +69,24 @@
 
 ## Technical Notes
 
-### Files Modified (BLOCK 73.3)
+### Files Created/Modified (BLOCK 73.3/73.4)
+
+**Backend:**
+- `/app/backend/src/modules/fractal/path/unified-path.builder.ts` — NEW
+- `/app/backend/src/modules/fractal/path/index.ts` — NEW
+- `/app/backend/src/modules/fractal/replay/replay-pack.builder.ts` — NEW
+- `/app/backend/src/modules/fractal/replay/index.ts` — NEW
+- `/app/backend/src/modules/fractal/focus/focus-pack.builder.ts` — Modified
+- `/app/backend/src/modules/fractal/focus/focus.routes.ts` — Modified
+- `/app/backend/src/modules/fractal/focus/focus.types.ts` — Modified
+
 **Frontend:**
-- `/app/frontend/src/components/fractal/chart/layers/drawHybridForecast.js` — Added markers parameter and intermediate marker rendering
-- `/app/frontend/src/components/fractal/chart/FractalChartCanvas.jsx` — Pass markers to hybrid renderer
+- `/app/frontend/src/components/fractal/chart/layers/drawHybridForecast.js` — Modified
+- `/app/frontend/src/components/fractal/chart/FractalHybridChart.jsx` — Modified
 
-### API Response Structure
-```json
-{
-  "focusPack": {
-    "forecast": {
-      "markers": [
-        {"horizon": "7d", "dayIndex": 6, "price": 68163.94},
-        {"horizon": "14d", "dayIndex": 13, "price": 71027.63}
-      ]
-    }
-  }
-}
-```
-
-### Testing
-- Backend API: All markers returned correctly (7d, 14d for 14D horizon)
-- Screenshots: 14D shows 7d marker on trajectory - continuity achieved
-- Divergence Grade B (84), RMSE 2.06%
+### Testing Results
+- Backend: 100% pass rate
+- Frontend: UI working, external ingress caching issue
 
 ---
 
@@ -88,3 +99,4 @@
 - Multi-horizon support (7D-365D)
 - Hybrid mode: Synthetic + Replay trajectories
 - Divergence metrics for model validation
+- Interactive match selection (NEW)
