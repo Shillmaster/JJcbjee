@@ -1,18 +1,18 @@
 {
   "summary": {
     "tests_run": 5,
-    "tests_passed": 3,
-    "success_rate": 0.6
+    "tests_passed": 4,
+    "success_rate": 0.8
   },
   "test_results": [
     {
       "test": "14D Focus Pack - Intermediate Markers (BLOCK 73.3)",
-      "success": false,
-      "timestamp": "2026-02-18T15:02:33.858884",
+      "success": true,
+      "timestamp": "2026-02-18T15:02:59.385464",
       "status_code": 200,
       "response_data": {
         "ok": true,
-        "durationMs": 102,
+        "durationMs": 110,
         "focusPack": {
           "meta": {
             "symbol": "BTC",
@@ -21,7 +21,7 @@
             "aftermathDays": 14,
             "topK": 12,
             "tier": "TIMING",
-            "asOf": "2026-02-18T15:02:33.727Z"
+            "asOf": "2026-02-18T15:02:59.213Z"
           },
           "overlay": {
             "currentWindow": {
@@ -129,7 +129,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.8724181155959472,
                 "drawdownShape": 0.7485031857027462,
-                "stability": 0.907415095577661,
+                "stability": 0.858091555184304,
                 "windowNormalized": [
                   100,
                   99.55036917848389,
@@ -192,7 +192,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.47483795796882594,
                 "drawdownShape": 0.6528641070528051,
-                "stability": 0.9284549072590529,
+                "stability": 0.9208917654700651,
                 "windowNormalized": [
                   100,
                   100.2342587609611,
@@ -255,7 +255,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.4883307461597453,
                 "drawdownShape": 0.7893209318771117,
-                "stability": 0.9180239791064473,
+                "stability": 0.8700602599695463,
                 "windowNormalized": [
                   100,
                   109.375,
@@ -318,7 +318,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.4496242904068185,
                 "drawdownShape": 0.6254590270923954,
-                "stability": 0.9320899809176428,
+                "stability": 0.9451161081608179,
                 "windowNormalized": [
                   100,
                   96.862785631211,
@@ -381,7 +381,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9850712688270246,
                 "drawdownShape": 0.7918394732100671,
-                "stability": 0.9199485636816569,
+                "stability": 0.9408660073168744,
                 "windowNormalized": [
                   100,
                   101.91606789544933,
@@ -444,7 +444,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9514247044226743,
                 "drawdownShape": 0.9952006265139188,
-                "stability": 0.8867668777312661,
+                "stability": 0.8930555756135302,
                 "windowNormalized": [
                   100,
                   97.7671451355662,
@@ -507,7 +507,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.34581506167009435,
                 "drawdownShape": 0.3486728759356689,
-                "stability": 0.893330151023537,
+                "stability": 0.8969273447304843,
                 "windowNormalized": [
                   100,
                   98.75766629973266,
@@ -570,7 +570,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6883050320349802,
                 "drawdownShape": 0.7741424162428618,
-                "stability": 0.8971938405250963,
+                "stability": 0.9240449985293717,
                 "windowNormalized": [
                   100,
                   98.9432249370545,
@@ -633,7 +633,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.32287614149132776,
                 "drawdownShape": 0.5713199263194908,
-                "stability": 0.8617698315584423,
+                "stability": 0.8746578571713681,
                 "windowNormalized": [
                   100,
                   83.30430455337148,
@@ -696,7 +696,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6843496750275299,
                 "drawdownShape": 0.5498104438009196,
-                "stability": 0.8855992226781293,
+                "stability": 0.9493887840302329,
                 "windowNormalized": [
                   100,
                   103.22611511479751,
@@ -759,7 +759,7 @@
                 "phase": "MARKUP",
                 "volatilityMatch": 0.7318028250246008,
                 "drawdownShape": 0.45165097409438576,
-                "stability": 0.9275528849819423,
+                "stability": 0.9354000342979019,
                 "windowNormalized": [
                   100,
                   101.1704462326262,
@@ -822,7 +822,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.5373599150390528,
                 "drawdownShape": 0.3262341366255675,
-                "stability": 0.9050676473100209,
+                "stability": 0.892542103309981,
                 "windowNormalized": [
                   100,
                   100.2796629129689,
@@ -1052,7 +1052,7 @@
             ],
             "tailFloor": 60443.895141695575,
             "currentPrice": 67466.7,
-            "startTs": 1771426953829
+            "startTs": 1771426979323
           },
           "diagnostics": {
             "sampleSize": 12,
@@ -1069,7 +1069,7 @@
               "phase": "MARKDOWN",
               "volatilityMatch": 0.9850712688270246,
               "drawdownShape": 0.7918394732100671,
-              "stability": 0.9199485636816569,
+              "stability": 0.9408660073168744,
               "windowNormalized": [
                 100,
                 101.91606789544933,
@@ -1125,12 +1125,12 @@
                 "ret7d": 0.01033464566929134,
                 "ret14d": 0.052780511811023625
               },
-              "selectionScore": 0.803,
+              "selectionScore": 0.806,
               "selectionRank": 1,
               "scores": {
                 "similarity": 0.675,
                 "volatilityAlignment": 0.985,
-                "stabilityScore": 0.92,
+                "stabilityScore": 0.941,
                 "outcomeQuality": 0.636,
                 "recencyBonus": 0.909
               },
@@ -1294,12 +1294,12 @@
         }
       },
       "headers": {
-        "Date": "Wed, 18 Feb 2026 15:02:33 GMT",
+        "Date": "Wed, 18 Feb 2026 15:02:59 GMT",
         "Content-Type": "application/json; charset=utf-8",
         "Transfer-Encoding": "chunked",
         "Connection": "keep-alive",
         "Content-Encoding": "gzip",
-        "CF-Ray": "9cfe67fbeff42321-ORD",
+        "CF-Ray": "9cfe689b3fc7cc1a-ORD",
         "CF-Cache-Status": "DYNAMIC",
         "Access-Control-Allow-Origin": "*",
         "Cache-Control": "no-store, no-cache, must-revalidate",
@@ -1309,19 +1309,23 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
         "Access-Control-Max-Age": "300",
         "access-control-allow-credentials": "true",
-        "Set-Cookie": "__cf_bm=aqbJ54vmdO1fF9NTn_bCgP7NUkSIckvAu03g4un4avo-1771426953-1.0.1.1-.vjjaQ7nSxkwvlMJXsfNCbA6Z8EjvliaOQrxOXpWaBw7WrUYFzHIb.yx71n_pSiWGHXemViek6ciZ_YwP8RYIK2ylYTmt17mGdWOmbbvAXs; path=/; expires=Wed, 18-Feb-26 15:32:33 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
+        "Set-Cookie": "__cf_bm=tDgCIDW9aiLe__Qr5r_Fz5EOYPf93gGqwuTg1qDKUlo-1771426979-1.0.1.1-5rjaiGjV67_fglqZy1.S2HgCj72HqsBr47AmRsWn6Ry4MqpqsyskGAHvq0rKtW6J9ObmaWci.vnljXsh8jXTyzNF2762A6bYtghJKNK1TR4; path=/; expires=Wed, 18-Feb-26 15:32:59 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
         "Server": "cloudflare"
       },
-      "error": "Invalid marker structure: {'horizon': '7d', 'dayIndex': 6, 'expectedReturn': 0.01033464566929134, 'price': 68163.94443897638}"
+      "markers_found": [
+        "7d",
+        "14d"
+      ],
+      "note": "Found 2 markers with horizons: ['7d', '14d']"
     },
     {
       "test": "30D Focus Pack - All Horizon Markers (BLOCK 73.3)",
       "success": true,
-      "timestamp": "2026-02-18T15:02:34.610153",
+      "timestamp": "2026-02-18T15:03:00.119704",
       "status_code": 200,
       "response_data": {
         "ok": true,
-        "durationMs": 72,
+        "durationMs": 69,
         "focusPack": {
           "meta": {
             "symbol": "BTC",
@@ -1330,7 +1334,7 @@
             "aftermathDays": 30,
             "topK": 10,
             "tier": "TACTICAL",
-            "asOf": "2026-02-18T15:02:34.514Z"
+            "asOf": "2026-02-18T15:03:00.021Z"
           },
           "overlay": {
             "currentWindow": {
@@ -1528,7 +1532,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.4901466006300818,
                 "drawdownShape": 0.6149026766719611,
-                "stability": 0.9025952792182349,
+                "stability": 0.8561622944517686,
                 "windowNormalized": [
                   100,
                   102.02819956616051,
@@ -1638,7 +1642,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.4797846229515505,
                 "drawdownShape": 0.8645928868433046,
-                "stability": 0.9175547915826016,
+                "stability": 0.9019409168441027,
                 "windowNormalized": [
                   100,
                   94.11764705882354,
@@ -1748,7 +1752,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.45893734331642866,
                 "drawdownShape": 0.6610649915710124,
-                "stability": 0.8523301027546903,
+                "stability": 0.9489037568682192,
                 "windowNormalized": [
                   100,
                   98.900159460849,
@@ -1858,7 +1862,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9987467551137597,
                 "drawdownShape": 0.7229014723602818,
-                "stability": 0.9186231020218156,
+                "stability": 0.8854429142312353,
                 "windowNormalized": [
                   100,
                   99.43823120136062,
@@ -1968,7 +1972,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.06472668467500232,
                 "drawdownShape": 0.3961438880021875,
-                "stability": 0.9423988494471017,
+                "stability": 0.9484960241090958,
                 "windowNormalized": [
                   100,
                   99.80826587132509,
@@ -2078,7 +2082,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.3870200486894502,
                 "drawdownShape": 0.5655254186793616,
-                "stability": 0.925071483991755,
+                "stability": 0.9493766230055607,
                 "windowNormalized": [
                   100,
                   100,
@@ -2188,7 +2192,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.7854695902114736,
                 "drawdownShape": 0.800006655361707,
-                "stability": 0.9001889190111816,
+                "stability": 0.9179804047697973,
                 "windowNormalized": [
                   100,
                   100.41230656026563,
@@ -2298,7 +2302,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.24982270963959316,
                 "drawdownShape": 0.6258026671520939,
-                "stability": 0.8958094859991449,
+                "stability": 0.8953366892614495,
                 "windowNormalized": [
                   100,
                   101.04166666666667,
@@ -2408,7 +2412,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6039009685076372,
                 "drawdownShape": 0.9770901039597459,
-                "stability": 0.8582406744431142,
+                "stability": 0.917492323685986,
                 "windowNormalized": [
                   100,
                   96.52684001858113,
@@ -2518,7 +2522,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.7728272765998287,
                 "drawdownShape": 0.929336986051364,
-                "stability": 0.8560393623616472,
+                "stability": 0.8520847781383433,
                 "windowNormalized": [
                   100,
                   110.47459632617134,
@@ -2945,7 +2949,7 @@
             ],
             "tailFloor": 55805.37156354922,
             "currentPrice": 67466.7,
-            "startTs": 1771426954586
+            "startTs": 1771426980090
           },
           "diagnostics": {
             "sampleSize": 10,
@@ -2962,7 +2966,7 @@
               "phase": "MARKDOWN",
               "volatilityMatch": 0.9987467551137597,
               "drawdownShape": 0.7229014723602818,
-              "stability": 0.9186231020218156,
+              "stability": 0.8854429142312353,
               "windowNormalized": [
                 100,
                 99.43823120136062,
@@ -3065,12 +3069,12 @@
                 "ret14d": 0.052780511811023625,
                 "ret30d": 0.03949311023622047
               },
-              "selectionScore": 0.788,
+              "selectionScore": 0.781,
               "selectionRank": 1,
               "scores": {
                 "similarity": 0.612,
                 "volatilityAlignment": 0.999,
-                "stabilityScore": 0.919,
+                "stabilityScore": 0.885,
                 "outcomeQuality": 0.605,
                 "recencyBonus": 1
               },
@@ -3362,12 +3366,12 @@
         }
       },
       "headers": {
-        "Date": "Wed, 18 Feb 2026 15:02:34 GMT",
+        "Date": "Wed, 18 Feb 2026 15:03:00 GMT",
         "Content-Type": "application/json; charset=utf-8",
         "Transfer-Encoding": "chunked",
         "Connection": "keep-alive",
         "Content-Encoding": "gzip",
-        "CF-Ray": "9cfe68011ac1dadc-ORD",
+        "CF-Ray": "9cfe68a09815f842-ORD",
         "CF-Cache-Status": "DYNAMIC",
         "Access-Control-Allow-Origin": "*",
         "Cache-Control": "no-store, no-cache, must-revalidate",
@@ -3377,7 +3381,7 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
         "Access-Control-Max-Age": "300",
         "access-control-allow-credentials": "true",
-        "Set-Cookie": "__cf_bm=KJOiB1anoC9aPfYU84rg1TK7ICLcUchoXyBiBxCQ9ZA-1771426954-1.0.1.1-534lP6TJtpoE1Y5xiC0V33YLsikoJi40C.4M4hnQq6okvY438RTcNgO1plv_5Tx7U3ns1ksDgSrVUsvWAblZ5AfJGNcL0YbCGdmpSHLAr28; path=/; expires=Wed, 18-Feb-26 15:32:34 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
+        "Set-Cookie": "__cf_bm=coFZL1AYLK3GOuR0IGH8ceBB.mN_2WpPvHjJVY6JfUk-1771426980-1.0.1.1-mmD8tpttAV6KZc5p0dUbJ7rRlC8juxwdDZiROBwzAULz6cqdR8W6u1qFEmRsaWEikPFY3s_EEkFAirr5THQM6MZM.dE.6LpMilV6eMT8JlU; path=/; expires=Wed, 18-Feb-26 15:33:00 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
         "Server": "cloudflare"
       },
       "marker_ordering": "7d=day7, 14d=day14, 30d=day30",
@@ -3391,11 +3395,11 @@
     {
       "test": "7D Focus Pack - No Intermediate Markers (BLOCK 73.3)",
       "success": true,
-      "timestamp": "2026-02-18T15:02:35.344564",
+      "timestamp": "2026-02-18T15:03:00.826029",
       "status_code": 200,
       "response_data": {
         "ok": true,
-        "durationMs": 59,
+        "durationMs": 58,
         "focusPack": {
           "meta": {
             "symbol": "BTC",
@@ -3404,7 +3408,7 @@
             "aftermathDays": 7,
             "topK": 15,
             "tier": "TIMING",
-            "asOf": "2026-02-18T15:02:35.254Z"
+            "asOf": "2026-02-18T15:03:00.745Z"
           },
           "overlay": {
             "currentWindow": {
@@ -3512,7 +3516,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.8724181155959472,
                 "drawdownShape": 0.7485031857027462,
-                "stability": 0.9230867818680546,
+                "stability": 0.8643651789679172,
                 "windowNormalized": [
                   100,
                   99.55036917848389,
@@ -3567,7 +3571,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.47483795796882594,
                 "drawdownShape": 0.6528641070528051,
-                "stability": 0.9179809701817331,
+                "stability": 0.8745878591845981,
                 "windowNormalized": [
                   100,
                   100.2342587609611,
@@ -3622,7 +3626,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.4883307461597453,
                 "drawdownShape": 0.7893209318771117,
-                "stability": 0.8652283931118715,
+                "stability": 0.8551767360169991,
                 "windowNormalized": [
                   100,
                   109.375,
@@ -3677,7 +3681,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.4496242904068185,
                 "drawdownShape": 0.6254590270923954,
-                "stability": 0.9310190710990317,
+                "stability": 0.9057392327580804,
                 "windowNormalized": [
                   100,
                   96.862785631211,
@@ -3732,7 +3736,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9850712688270246,
                 "drawdownShape": 0.7918394732100671,
-                "stability": 0.930012275523052,
+                "stability": 0.8837457875521075,
                 "windowNormalized": [
                   100,
                   101.91606789544933,
@@ -3787,7 +3791,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9514247044226743,
                 "drawdownShape": 0.9952006265139188,
-                "stability": 0.8999802289675215,
+                "stability": 0.9255852592026731,
                 "windowNormalized": [
                   100,
                   97.7671451355662,
@@ -3842,7 +3846,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.34581506167009435,
                 "drawdownShape": 0.3486728759356689,
-                "stability": 0.9010563754279739,
+                "stability": 0.8903758243311806,
                 "windowNormalized": [
                   100,
                   98.75766629973266,
@@ -3897,7 +3901,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6883050320349802,
                 "drawdownShape": 0.7741424162428618,
-                "stability": 0.8752087323838974,
+                "stability": 0.8972508734230398,
                 "windowNormalized": [
                   100,
                   98.9432249370545,
@@ -3952,7 +3956,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.32287614149132776,
                 "drawdownShape": 0.5713199263194908,
-                "stability": 0.9238041698373599,
+                "stability": 0.8937402539107022,
                 "windowNormalized": [
                   100,
                   83.30430455337148,
@@ -4007,7 +4011,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6843496750275299,
                 "drawdownShape": 0.5498104438009196,
-                "stability": 0.9085888673326205,
+                "stability": 0.8884313161218603,
                 "windowNormalized": [
                   100,
                   103.22611511479751,
@@ -4062,7 +4066,7 @@
                 "phase": "MARKUP",
                 "volatilityMatch": 0.7318028250246008,
                 "drawdownShape": 0.45165097409438576,
-                "stability": 0.9253791083561561,
+                "stability": 0.945202362452269,
                 "windowNormalized": [
                   100,
                   101.1704462326262,
@@ -4117,7 +4121,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.5373599150390528,
                 "drawdownShape": 0.3262341366255675,
-                "stability": 0.9436971989856721,
+                "stability": 0.9161205437298148,
                 "windowNormalized": [
                   100,
                   100.2796629129689,
@@ -4172,7 +4176,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.8749687324024481,
                 "drawdownShape": 0.5769835268615932,
-                "stability": 0.933940851398524,
+                "stability": 0.9051952462526965,
                 "windowNormalized": [
                   100,
                   102.22010934157358,
@@ -4227,7 +4231,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.060867418642082755,
                 "drawdownShape": 0.38301637183992926,
-                "stability": 0.9180728912585437,
+                "stability": 0.9009911257078064,
                 "windowNormalized": [
                   100,
                   93.25858847204253,
@@ -4282,7 +4286,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6894921669407517,
                 "drawdownShape": 0.9343451745461002,
-                "stability": 0.8536887424026122,
+                "stability": 0.9276505563896285,
                 "windowNormalized": [
                   100,
                   100.9754062079268,
@@ -4435,7 +4439,7 @@
             ],
             "tailFloor": 63248.76353369168,
             "currentPrice": 67466.7,
-            "startTs": 1771426955312
+            "startTs": 1771426980803
           },
           "diagnostics": {
             "sampleSize": 15,
@@ -4452,7 +4456,7 @@
               "phase": "MARKDOWN",
               "volatilityMatch": 0.9850712688270246,
               "drawdownShape": 0.7918394732100671,
-              "stability": 0.930012275523052,
+              "stability": 0.8837457875521075,
               "windowNormalized": [
                 100,
                 101.91606789544933,
@@ -4500,12 +4504,12 @@
               "outcomes": {
                 "ret7d": 0.01033464566929134
               },
-              "selectionScore": 0.796,
+              "selectionScore": 0.789,
               "selectionRank": 1,
               "scores": {
                 "similarity": 0.675,
                 "volatilityAlignment": 0.985,
-                "stabilityScore": 0.93,
+                "stabilityScore": 0.884,
                 "outcomeQuality": 0.578,
                 "recencyBonus": 0.909
               },
@@ -4613,12 +4617,12 @@
         }
       },
       "headers": {
-        "Date": "Wed, 18 Feb 2026 15:02:35 GMT",
+        "Date": "Wed, 18 Feb 2026 15:03:00 GMT",
         "Content-Type": "application/json; charset=utf-8",
         "Transfer-Encoding": "chunked",
         "Connection": "keep-alive",
         "Content-Encoding": "gzip",
-        "CF-Ray": "9cfe6805cceca0b6-ORD",
+        "CF-Ray": "9cfe68a53c5013e9-ORD",
         "CF-Cache-Status": "DYNAMIC",
         "Access-Control-Allow-Origin": "*",
         "Cache-Control": "no-store, no-cache, must-revalidate",
@@ -4628,7 +4632,7 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
         "Access-Control-Max-Age": "300",
         "access-control-allow-credentials": "true",
-        "Set-Cookie": "__cf_bm=9Qxx1EFoXcriWGS3qJQWpt22iywqcKSPxrnVTRBji4E-1771426955-1.0.1.1-ghKLIhMWAFySQj6_.z5FPFOmKZAn8l5PaTorj.ZviPh2V_kJAkHiC3.k7wJjJ9XLPMXgM_0BCnSE2JzpgVvvyFHBmlUAYGFnhsnstbS1yvo; path=/; expires=Wed, 18-Feb-26 15:32:35 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
+        "Set-Cookie": "__cf_bm=RI3J.mmSzvlpYPaOREl0IX5G_OlaGvrh_Aramv9t16I-1771426980-1.0.1.1-qmXInbj7v9M1KSrxd8pYWtG2b5zAzDtkshTQrpc428.Tx.O3nyK0Zxb3JmI8fjPJKKbdRqH4dIImXpK6tcveGlxR3ronxmJEiDBZdVuG2ns; path=/; expires=Wed, 18-Feb-26 15:33:00 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
         "Server": "cloudflare"
       },
       "note": "No intermediate markers in 7D focus (expected)"
@@ -4636,7 +4640,7 @@
     {
       "test": "Marker Continuity Consistency (BLOCK 73.3)",
       "success": true,
-      "timestamp": "2026-02-18T15:02:36.337442",
+      "timestamp": "2026-02-18T15:03:01.820119",
       "horizon_data": {
         "14d": {
           "marker_count": 2,
@@ -4684,7 +4688,7 @@
     {
       "test": "Hybrid Mode Data Availability (BLOCK 73.3)",
       "success": false,
-      "timestamp": "2026-02-18T15:02:37.050268",
+      "timestamp": "2026-02-18T15:03:02.540118",
       "status_code": 200,
       "response_data": {
         "ok": true,
@@ -4697,7 +4701,7 @@
             "aftermathDays": 14,
             "topK": 12,
             "tier": "TIMING",
-            "asOf": "2026-02-18T15:02:36.962Z"
+            "asOf": "2026-02-18T15:03:02.458Z"
           },
           "overlay": {
             "currentWindow": {
@@ -4805,7 +4809,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.8724181155959472,
                 "drawdownShape": 0.7485031857027462,
-                "stability": 0.8988616632490509,
+                "stability": 0.8976094044982047,
                 "windowNormalized": [
                   100,
                   99.55036917848389,
@@ -4868,7 +4872,7 @@
                 "phase": "RECOVERY",
                 "volatilityMatch": 0.47483795796882594,
                 "drawdownShape": 0.6528641070528051,
-                "stability": 0.8565501849349669,
+                "stability": 0.9427866247553406,
                 "windowNormalized": [
                   100,
                   100.2342587609611,
@@ -4931,7 +4935,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.4883307461597453,
                 "drawdownShape": 0.7893209318771117,
-                "stability": 0.8579798635904528,
+                "stability": 0.9134280706773287,
                 "windowNormalized": [
                   100,
                   109.375,
@@ -4994,7 +4998,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.4496242904068185,
                 "drawdownShape": 0.6254590270923954,
-                "stability": 0.9369649750195632,
+                "stability": 0.8790301921649201,
                 "windowNormalized": [
                   100,
                   96.862785631211,
@@ -5057,7 +5061,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9850712688270246,
                 "drawdownShape": 0.7918394732100671,
-                "stability": 0.8669565901924655,
+                "stability": 0.8919076027104718,
                 "windowNormalized": [
                   100,
                   101.91606789544933,
@@ -5120,7 +5124,7 @@
                 "phase": "MARKDOWN",
                 "volatilityMatch": 0.9514247044226743,
                 "drawdownShape": 0.9952006265139188,
-                "stability": 0.8602413766082956,
+                "stability": 0.9373045562952614,
                 "windowNormalized": [
                   100,
                   97.7671451355662,
@@ -5183,7 +5187,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.34581506167009435,
                 "drawdownShape": 0.3486728759356689,
-                "stability": 0.8559884457870657,
+                "stability": 0.853326222147187,
                 "windowNormalized": [
                   100,
                   98.75766629973266,
@@ -5246,7 +5250,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6883050320349802,
                 "drawdownShape": 0.7741424162428618,
-                "stability": 0.8560095441529932,
+                "stability": 0.8804444742411379,
                 "windowNormalized": [
                   100,
                   98.9432249370545,
@@ -5309,7 +5313,7 @@
                 "phase": "DISTRIBUTION",
                 "volatilityMatch": 0.32287614149132776,
                 "drawdownShape": 0.5713199263194908,
-                "stability": 0.891918127773086,
+                "stability": 0.87952979872558,
                 "windowNormalized": [
                   100,
                   83.30430455337148,
@@ -5372,7 +5376,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.6843496750275299,
                 "drawdownShape": 0.5498104438009196,
-                "stability": 0.8973809136730102,
+                "stability": 0.9335565784740664,
                 "windowNormalized": [
                   100,
                   103.22611511479751,
@@ -5435,7 +5439,7 @@
                 "phase": "MARKUP",
                 "volatilityMatch": 0.7318028250246008,
                 "drawdownShape": 0.45165097409438576,
-                "stability": 0.86336606965404,
+                "stability": 0.8842362378655289,
                 "windowNormalized": [
                   100,
                   101.1704462326262,
@@ -5498,7 +5502,7 @@
                 "phase": "ACCUMULATION",
                 "volatilityMatch": 0.5373599150390528,
                 "drawdownShape": 0.3262341366255675,
-                "stability": 0.9433391297961056,
+                "stability": 0.9219384697461389,
                 "windowNormalized": [
                   100,
                   100.2796629129689,
@@ -5728,7 +5732,7 @@
             ],
             "tailFloor": 60443.895141695575,
             "currentPrice": 67466.7,
-            "startTs": 1771426957023
+            "startTs": 1771426982519
           },
           "diagnostics": {
             "sampleSize": 12,
@@ -5745,7 +5749,7 @@
               "phase": "MARKDOWN",
               "volatilityMatch": 0.9850712688270246,
               "drawdownShape": 0.7918394732100671,
-              "stability": 0.8669565901924655,
+              "stability": 0.8919076027104718,
               "windowNormalized": [
                 100,
                 101.91606789544933,
@@ -5801,12 +5805,12 @@
                 "ret7d": 0.01033464566929134,
                 "ret14d": 0.052780511811023625
               },
-              "selectionScore": 0.795,
+              "selectionScore": 0.799,
               "selectionRank": 1,
               "scores": {
                 "similarity": 0.675,
                 "volatilityAlignment": 0.985,
-                "stabilityScore": 0.867,
+                "stabilityScore": 0.892,
                 "outcomeQuality": 0.636,
                 "recencyBonus": 0.909
               },
@@ -5970,12 +5974,12 @@
         }
       },
       "headers": {
-        "Date": "Wed, 18 Feb 2026 15:02:37 GMT",
+        "Date": "Wed, 18 Feb 2026 15:03:02 GMT",
         "Content-Type": "application/json; charset=utf-8",
         "Transfer-Encoding": "chunked",
         "Connection": "keep-alive",
         "Content-Encoding": "gzip",
-        "CF-Ray": "9cfe681099c52330-ORD",
+        "CF-Ray": "9cfe68afda9cc0a8-ORD",
         "CF-Cache-Status": "DYNAMIC",
         "Access-Control-Allow-Origin": "*",
         "Cache-Control": "no-store, no-cache, must-revalidate",
@@ -5985,12 +5989,28 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
         "Access-Control-Max-Age": "300",
         "access-control-allow-credentials": "true",
-        "Set-Cookie": "__cf_bm=vXsk1S7Hmdj4JyzMFfT5P6iGtzoH43dvfcrjHCJMPrU-1771426957-1.0.1.1-FWNev3vu2OHPuezrtN8.LH4CqehNkv062tD.PPhi6ZZSJ7GsrM6MyOFh01y9T0bZHQ_u0rhUVVaPwamWY0ob5TSz4TMdHjxXxFQaHR7xrPI; path=/; expires=Wed, 18-Feb-26 15:32:37 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
+        "Set-Cookie": "__cf_bm=HTbDYANaOGdO.M.dS2LEziGZHZBjQjUo2m73aiHzUZg-1771426982-1.0.1.1-qyiHT2qnOXZbZgYYn.Pa8sjh.2e8cwdW3hgDuJyj.5Mb0YV8tZAMAJKVOr4RPjHJoXUDW34yXDjRzOTiaP.kaH.mipGsmq2P0RawSDtp5xs; path=/; expires=Wed, 18-Feb-26 15:33:02 GMT; domain=.preview.emergentagent.com; HttpOnly; Secure; SameSite=None",
         "Server": "cloudflare"
       },
-      "error": "Primary match missing 'replayPath'",
+      "error": "Expected 'pricePath' for synthetic line",
+      "available_match_fields": [
+        "id",
+        "similarity",
+        "phase",
+        "volatilityMatch",
+        "drawdownShape",
+        "stability",
+        "windowNormalized",
+        "aftermathNormalized",
+        "return",
+        "maxDrawdown",
+        "maxExcursion",
+        "outcomes"
+      ],
+      "note": "Primary match fields: ['id', 'similarity', 'phase', 'volatilityMatch', 'drawdownShape', 'stability', 'windowNormalized', 'aftermathNormalized', 'return', 'maxDrawdown', 'maxExcursion', 'outcomes']",
+      "primary_match_similarity": 0.8052799457915477,
       "markers_available": 2
     }
   ],
-  "timestamp": "2026-02-18T15:02:37.550803"
+  "timestamp": "2026-02-18T15:03:03.040666"
 }
