@@ -1,8 +1,15 @@
 /**
- * FRACTAL SIGNAL CONTRACT v2.1.0
+ * FRACTAL SIGNAL CONTRACT v2.1.1
  * 
  * FROZEN: This contract is immutable.
- * Any changes require a new version (v2.2.0+).
+ * Any changes require a new version (v2.1.2+).
+ * 
+ * v2.1.1 Changes:
+ * - Added Alert System (BLOCK 67-68)
+ * - Frozen alert policy table
+ * - Frozen quota limits
+ * - Frozen cooldown periods
+ * - Frozen severity mapping
  * 
  * Used by:
  * - Frontend (Research Terminal)
@@ -10,7 +17,7 @@
  * - Admin Panel
  */
 
-export const FRACTAL_CONTRACT_VERSION = 'v2.1.0' as const;
+export const FRACTAL_CONTRACT_VERSION = 'v2.1.1' as const;
 export const FRACTAL_CONTRACT_FROZEN = true as const;
 
 // ═══════════════════════════════════════════════════════════════
