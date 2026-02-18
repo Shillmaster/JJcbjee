@@ -129,7 +129,15 @@ export async function buildFocusPack(
     asOf,
   };
   
-  return { meta, overlay, forecast, diagnostics, primarySelection };
+  // BLOCK 73.1.1: Build normalized series for STRUCTURE % mode
+  const normalizedSeries = buildNormalizedSeries(
+    forecast,
+    selectionResult.primaryMatch,
+    currentPrice,
+    tier
+  );
+  
+  return { meta, overlay, forecast, diagnostics, primarySelection, normalizedSeries };
 }
 
 // ═══════════════════════════════════════════════════════════════
