@@ -1,17 +1,20 @@
 /**
  * FRACTAL V2.1 — Chart Data Endpoint
+ * BLOCK 73.5.1 — Phase Stats for hover tooltips
  * 
  * GET /api/fractal/v2.1/chart
- * Returns: candles, SMA200, phase zones for UI rendering
+ * Returns: candles, SMA200, phase zones, phase stats for UI rendering
  * 
  * Contract:
  * - Candles: Daily OHLCV
  * - SMA200: 200-day simple moving average
  * - PhaseZones: Market phase regions (MARKUP, MARKDOWN, etc.)
+ * - PhaseStats: Statistics for each phase (duration, return, matches)
  */
 
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { CanonicalStore } from '../data/canonical.store.js';
+import { calculatePhaseStats, type PhaseStats } from '../phase/phase-stats.service.js';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPE DEFINITIONS
