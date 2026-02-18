@@ -103,12 +103,14 @@ export async function buildFocusPack(
       
       if (from && to) {
         const fromTs = new Date(from).getTime();
-        const toTs = new Date(to).getTime();
+        // Include end of day for toTs
+        const toTs = new Date(to + 'T23:59:59.999Z').getTime();
         
         // Filter matches that fall within phase date range
         const originalCount = filteredMatches.length;
         filteredMatches = filteredMatches.filter((m: any) => {
-          const matchTs = new Date(m.date || m.id).getTime();
+          const matchDate = m.date || m.id;
+          const matchTs = new Date(matchDate).getTime();
           return matchTs >= fromTs && matchTs <= toTs;
         });
         
