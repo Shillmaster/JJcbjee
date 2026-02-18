@@ -31,6 +31,7 @@ export async function focusPackRoutes(fastify: FastifyInstance): Promise<void> {
   
   /**
    * GET /api/fractal/v2.1/focus-pack
+   * BLOCK 73.5.2: Added phaseId parameter for phase filtering
    * 
    * Returns complete FocusPack for a specific horizon
    */
@@ -39,12 +40,14 @@ export async function focusPackRoutes(fastify: FastifyInstance): Promise<void> {
       Querystring: { 
         symbol?: string; 
         focus?: string;
+        phaseId?: string;  // BLOCK 73.5.2
       } 
     }>,
     reply
   ) => {
     const symbol = String(req.query.symbol ?? 'BTC').toUpperCase();
     const focusRaw = req.query.focus || '30d';
+    const phaseId = req.query.phaseId || null;  // BLOCK 73.5.2
     
     // Validate symbol
     if (symbol !== 'BTC') {
