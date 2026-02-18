@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { drawBackground } from "./layers/drawBackground";
 import { drawGrid } from "./layers/drawGrid";
 import { drawCandles } from "./layers/drawCandles";
@@ -8,6 +8,7 @@ import { drawForecast } from "./layers/drawForecast";
 import { draw7dArrow } from "./layers/draw7dArrow";
 import { drawHybridForecast } from "./layers/drawHybridForecast";
 import { makeIndexXScale, makeYScale, paddedMinMax } from "./math/scale";
+import { PhaseTooltip } from "./PhaseTooltip";
 
 function Tooltip({ candle, sma, phase }) {
   const date = new Date(candle.t).toLocaleDateString();
