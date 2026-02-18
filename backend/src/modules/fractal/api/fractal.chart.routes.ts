@@ -283,6 +283,25 @@ export async function fractalChartRoutes(fastify: FastifyInstance): Promise<void
       v: c.ohlcv.v ?? 0
     }));
     
+    // BLOCK 73.5.1: Calculate phase stats for hover tooltips
+    const phaseStatsInput = filteredZones.map(z => ({
+      phase: z.phase as any,
+      from: new Date(z.from).toISOString(),
+      to: new Date(z.to).toISOString()
+    }));
+    
+    const candleStatsInput = candleData.map(c => ({
+      t: new Date(c.t).toISOString(),
+      o: c.o,
+      h: c.h,
+      l: c.l,
+      c: c.c,
+      v: c.v
+    }));
+    
+    // Pass empty matches for now - will be populated by focus-pack
+    const phaseStats = calculatePhaseStats(phaseStatsInput, candleStatsInput, []);
+    
     return {
       symbol,
       tf: '1D',
@@ -290,7 +309,8 @@ export async function fractalChartRoutes(fastify: FastifyInstance): Promise<void
       count: candleData.length,
       candles: candleData,
       sma200: sma200Data,
-      phaseZones: filteredZones
+      phaseZones: filteredZones,
+      phaseStats
     };
   });
 }
