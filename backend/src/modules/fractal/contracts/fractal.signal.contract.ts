@@ -146,7 +146,16 @@ const CONTRACT_SCHEMA_STRING = JSON.stringify({
     'reliability', 'market', 'explain', 'governance'
   ],
   horizons: [7, 14, 30],
-  symbol: 'BTC'
+  symbol: 'BTC',
+  // v2.1.1: Alert System frozen parameters
+  alertPolicy: {
+    quotaMax: 3,
+    quotaResetHours: 24,
+    cooldownInfoHighMs: 21600000,  // 6h
+    cooldownCriticalMs: 3600000,   // 1h
+    alertTypes: ['REGIME_SHIFT', 'CRISIS_ENTER', 'CRISIS_EXIT', 'HEALTH_DROP', 'TAIL_SPIKE'],
+    alertLevels: ['INFO', 'HIGH', 'CRITICAL']
+  }
 });
 
 export const FRACTAL_CONTRACT_HASH = createHash('sha256')
