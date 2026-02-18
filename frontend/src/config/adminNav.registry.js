@@ -44,6 +44,8 @@ import {
   MessageCircle,
   Link2,
   Bell,
+  TrendingDown,
+  AlertTriangle,
 } from 'lucide-react';
 
 /**
