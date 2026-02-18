@@ -177,19 +177,9 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', width, heig
     // anchor at last candle x
     const xAnchor = x(candles.length - 1);
     
-    // BLOCK 72.1: Choose forecast renderer based on focus
+    // BLOCK 72.2: Choose forecast renderer based on focus
     if (renderMode === 'CAPSULE_7D' && forecast?.distribution7d) {
-      // 7D: Draw directional arrow only (no trajectory, no capsule)
-      const stats = forecast.stats || {};
-      const hitRate = stats.hitRate ?? 0.6;
-      const sampleSize = stats.sampleSize ?? 15;
-      
-      // Calculate confidence
-      const dispersion = Math.abs((forecast.distribution7d.p90 || 0.15) - (forecast.distribution7d.p10 || -0.15));
-      const p50 = forecast.distribution7d.p50 || 0;
-      const dispersionPenalty = Math.min(dispersion / Math.max(Math.abs(p50), 0.01), 1) * 0.3;
-      const confidence = Math.min(100, Math.max(0, (hitRate * 100) * (1 - dispersionPenalty) * (sampleSize >= 10 ? 1 : 0.8)));
-      
+      // 7D: Draw compact directional arrow (no trajectory, no capsule)
       draw7dArrow(
         ctx,
         forecast.distribution7d,
@@ -198,10 +188,7 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', width, heig
         y,
         margins.top,
         margins.bottom,
-        height,
-        confidence,
-        sampleSize,
-        hitRate
+        height
       );
     } else {
       // 14D+: Draw aftermath-driven trajectory with fan
