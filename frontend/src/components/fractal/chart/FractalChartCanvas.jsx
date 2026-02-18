@@ -89,7 +89,7 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'pri
 
   // Mouse handler
 
-  // Mouse handler
+  // Mouse handler (BLOCK 73.5.1: Phase hover detection)
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas || !chart?.candles?.length) return;
@@ -97,6 +97,7 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'pri
     const handleMove = (e) => {
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
 
       const plotW = width - margins.left - margins.right;
       const step = plotW / (chart.candles.length - 1);
@@ -104,12 +105,40 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'pri
 
       if (index >= 0 && index < chart.candles.length) {
         setHoverIndex(index);
+        
+        // BLOCK 73.5.1: Detect phase under cursor
+        const candle = chart.candles[index];
+        const candleTs = candle.t;
+        
+        // Find phase zone containing this candle
+        const zone = phaseZones.find(z => candleTs >= z.from && candleTs <= z.to);
+        
+        if (zone && phaseStats.length > 0) {
+          // Find matching phase stats
+          const stats = phaseStats.find(s => 
+            s.from === new Date(zone.from).toISOString() || 
+            new Date(s.from).getTime() === zone.from
+          );
+          
+          if (stats) {
+            setHoveredPhase(stats);
+            setPhaseTooltipPos({ x: e.clientX, y: e.clientY });
+          } else {
+            setHoveredPhase(null);
+          }
+        } else {
+          setHoveredPhase(null);
+        }
       } else {
         setHoverIndex(null);
+        setHoveredPhase(null);
       }
     };
 
-    const handleLeave = () => setHoverIndex(null);
+    const handleLeave = () => {
+      setHoverIndex(null);
+      setHoveredPhase(null);
+    };
 
     canvas.addEventListener("mousemove", handleMove);
     canvas.addEventListener("mouseleave", handleLeave);
@@ -118,7 +147,7 @@ export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'pri
       canvas.removeEventListener("mousemove", handleMove);
       canvas.removeEventListener("mouseleave", handleLeave);
     };
-  }, [chart, width, margins]);
+  }, [chart, width, margins, phaseZones, phaseStats]);
 
   // Render
   useEffect(() => {
