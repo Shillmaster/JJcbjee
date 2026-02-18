@@ -66,7 +66,7 @@ function Tooltip({ candle, sma, phase }) {
   );
 }
 
-export function FractalChartCanvas({ chart, forecast, focus = '30d', width, height }) {
+export function FractalChartCanvas({ chart, forecast, focus = '30d', mode = 'price', primaryMatch, width, height }) {
   const ref = useRef(null);
   const [hoverIndex, setHoverIndex] = useState(null);
   
