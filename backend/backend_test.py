@@ -3112,6 +3112,20 @@ class FractalAPITester:
         ]
 
         # ═══════════════════════════════════════════════════════════════
+        # BLOCK 70.2: HORIZON BINDING TESTS (FOCUS-PACK API)
+        # ═══════════════════════════════════════════════════════════════
+        print("\n🎯 BLOCK 70.2: HORIZON BINDING SYSTEM (FOCUS-PACK)")
+        print("-" * 50)
+        
+        horizon_binding_tests = [
+            self.test_focus_pack_7d_horizon(),
+            self.test_focus_pack_30d_horizon(),
+            self.test_focus_pack_365d_horizon(),
+            self.test_all_horizons_binding(),
+            self.test_chart_data_consistency(),
+        ]
+
+        # ═══════════════════════════════════════════════════════════════
         # FRACTAL CORE ENDPOINTS
         # ═══════════════════════════════════════════════════════════════
         print("\n🔧 FRACTAL CORE ENDPOINTS")
