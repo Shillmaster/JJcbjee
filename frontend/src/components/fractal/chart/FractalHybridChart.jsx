@@ -444,8 +444,5 @@ const styles = {
     textAlign: 'center',
   },
 };
-    fontStyle: 'italic',
-  },
-};
 
 export default FractalHybridChart;
