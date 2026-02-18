@@ -150,6 +150,17 @@ export const FRACTAL_TOOLTIPS = {
 • P6 NONE — Всё в норме. Никаких рекомендаций.`,
     severity: 'warning',
   },
+  playbookTypes: {
+    title: 'Playbook Types',
+    description: `Типы рекомендуемых действий:
+• NO_ACTION — Система работает штатно, вмешательство не требуется.
+• INVESTIGATION — Требуется анализ. Изучите метрики и логи.
+• PROTECTION_ESCALATION — Эскалация защиты. Система рекомендует усилить риск-контроль.
+• RECALIBRATION — Требуется перекалибровка модели или параметров.
+• RECOVERY — Восстановление. Система возвращается к нормальному режиму.
+• FREEZE_ONLY — Критично. Торговля должна быть приостановлена.`,
+    severity: 'warning',
+  },
   recentActivity: {
     title: 'Recent Activity',
     description: 'График надёжности за 7 дней и журнал действий.',
