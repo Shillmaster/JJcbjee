@@ -174,7 +174,49 @@ export function drawHybridForecast(
   
   ctx.restore();
   
-  // === 8. HORIZON LABEL ===
+  // === 8. INTERMEDIATE HORIZON MARKERS (BLOCK 73.3 — 14D Continuity Fix) ===
+  // Draw markers for sub-horizons (e.g., 7d on 14d trajectory)
+  const displayMarkers = markers.length > 0 
+    ? markers.filter(m => (m.day || m.dayIndex + 1) < N) // Only intermediate markers
+    : forecast?.markers?.filter(m => (m.day || m.dayIndex + 1) < N) || [];
+  
+  displayMarkers.forEach(marker => {
+    const day = marker.day || (marker.dayIndex + 1);
+    const price = marker.price || pricePath[Math.min(day - 1, N - 1)];
+    if (!price || day >= N) return;
+    
+    const mx = dayToX(day);
+    const my = y(price);
+    
+    // Calculate alpha for confidence decay effect
+    const progress = day / N;
+    const markerAlpha = 1 - progress * 0.2;
+    
+    // Circle marker (smaller than endpoint)
+    ctx.save();
+    ctx.fillStyle = `rgba(22, 163, 74, ${markerAlpha * 0.8})`;
+    ctx.beginPath();
+    ctx.arc(mx, my, 4, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // White inner circle
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(mx, my, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    
+    // Horizon label
+    const label = marker.horizon || `${day}d`;
+    ctx.save();
+    ctx.fillStyle = `rgba(0, 0, 0, ${0.4 + markerAlpha * 0.2})`;
+    ctx.font = "bold 9px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText(label, mx, my - 10);
+    ctx.restore();
+  });
+  
+  // === 9. ENDPOINT HORIZON LABEL ===
   ctx.save();
   ctx.font = "bold 10px system-ui";
   ctx.fillStyle = "rgba(0,0,0,0.5)";
