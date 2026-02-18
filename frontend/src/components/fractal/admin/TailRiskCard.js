@@ -1,6 +1,7 @@
 /**
- * BLOCK 50 — Tail Risk Card (Improved UI)
- * Shows MC tail risk metrics with tooltips
+ * BLOCK 50 — Tail Risk Card
+ * English: titles, metric names
+ * Russian: only in tooltips
  */
 
 import React from 'react';
@@ -13,19 +14,18 @@ const getColor = (val, thresholds) => {
   return { text: 'text-green-600', bg: 'bg-green-50', bar: 'bg-green-500' };
 };
 
+const getRiskLevel = (dd) => {
+  if (dd >= 45) return { text: 'CRITICAL', color: 'text-red-600', icon: AlertTriangle };
+  if (dd >= 35) return { text: 'ELEVATED', color: 'text-amber-600', icon: TrendingDown };
+  return { text: 'NORMAL', color: 'text-green-600', icon: Target };
+};
+
 export function TailRiskCard({ model }) {
   if (!model?.mc) return null;
   
   const { mc } = model;
   const p95DD = mc.p95MaxDD * 100;
   const ddColors = getColor(p95DD, { warn: 35, critical: 45 });
-  
-  // Determine risk level
-  const getRiskLevel = (dd) => {
-    if (dd >= 45) return { text: 'Критический', color: 'text-red-600', icon: AlertTriangle };
-    if (dd >= 35) return { text: 'Повышенный', color: 'text-amber-600', icon: TrendingDown };
-    return { text: 'Приемлемый', color: 'text-green-600', icon: Target };
-  };
   const riskLevel = getRiskLevel(p95DD);
   const RiskIcon = riskLevel.icon;
   
@@ -37,7 +37,7 @@ export function TailRiskCard({ model }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Tail Risk (MC)</h3>
+          <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">TAIL RISK (MC)</h3>
           <InfoTooltip {...FRACTAL_TOOLTIPS.tailRisk} placement="right" />
         </div>
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${ddColors.bg}`}>
@@ -46,19 +46,11 @@ export function TailRiskCard({ model }) {
         </div>
       </div>
       
-      {/* Description */}
-      <div className="mb-5 p-3 bg-gray-50 rounded-xl border border-gray-100">
-        <p className="text-sm text-gray-600">
-          Monte Carlo симуляция показывает вероятностное распределение максимальных потерь
-        </p>
-      </div>
-      
       {/* P95 Max Drawdown */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-sm text-gray-500 font-medium">P95 Max Drawdown</p>
-            <p className="text-xs text-gray-400">Максимальная просадка в 95% сценариев</p>
           </div>
           <div className="text-right">
             <p className={`text-4xl font-black ${ddColors.text}`}>{p95DD.toFixed(1)}</p>
@@ -77,7 +69,6 @@ export function TailRiskCard({ model }) {
             className={`absolute top-0 left-0 h-5 ${ddColors.bar} rounded-l-full transition-all duration-700`}
             style={{ width: `${Math.min(p95DD, 100)}%`, borderRadius: p95DD >= 100 ? '9999px' : undefined }}
           ></div>
-          {/* Marker */}
           <div 
             className="absolute top-0 w-1 h-5 bg-gray-800 rounded-full shadow-lg transition-all duration-700"
             style={{ left: `${Math.min(p95DD, 100)}%`, transform: 'translateX(-50%)' }}
@@ -87,7 +78,7 @@ export function TailRiskCard({ model }) {
         {/* Zone labels */}
         <div className="flex justify-between text-xs">
           <span className="text-gray-400">0%</span>
-          <span className="text-green-600 font-medium">Норма</span>
+          <span className="text-green-600 font-medium">Normal</span>
           <span className="text-amber-600 font-medium">35%</span>
           <span className="text-red-600 font-medium">45%</span>
           <span className="text-gray-400">100%</span>
@@ -106,7 +97,6 @@ export function TailRiskCard({ model }) {
           }`}>
             {(mc.p05CAGR * 100).toFixed(1)}%
           </p>
-          <p className="text-xs text-gray-400 mt-1">Худший 5% годовой возврат</p>
         </div>
         
         <div className="p-4 bg-gray-50 rounded-xl">
@@ -119,14 +109,13 @@ export function TailRiskCard({ model }) {
           }`}>
             {mc.p10Sharpe.toFixed(2)}
           </p>
-          <p className="text-xs text-gray-400 mt-1">Худший 10% Sharpe ratio</p>
         </div>
       </div>
       
       {/* Method info */}
       <div className="mt-4 pt-4 border-t border-gray-100">
         <p className="text-xs text-gray-400 text-center">
-          Метод: <span className="font-mono">{mc.method || 'BOOTSTRAP'}</span>
+          Method: <span className="font-mono">{mc.method || 'BOOTSTRAP'}</span>
         </p>
       </div>
     </div>
