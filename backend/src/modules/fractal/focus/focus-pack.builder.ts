@@ -52,7 +52,7 @@ export async function buildFocusPack(
   const tier = getFocusTier(focus);
   const asOf = new Date().toISOString();
   
-  // Load candles
+  // Load candles (for aftermath calculation)
   const candles = await canonicalStore.getCandles({ 
     symbol: symbol === 'BTC' ? 'BTCUSD' : symbol, 
     limit: Math.max(1500, cfg.windowLen * 3 + cfg.aftermathDays * 2) 
@@ -66,11 +66,12 @@ export async function buildFocusPack(
   const mappedWindowLen = mapToSupportedWindow(cfg.windowLen);
   
   // Run fractal engine with focus-specific parameters
+  // Note: engine uses its internal cache, candles parameter is ignored
   const result = await engine.match({
     symbol: symbol === 'BTC' ? 'BTCUSD' : symbol,
-    candles,
     windowLen: mappedWindowLen,
     topK: cfg.topK,
+    forwardHorizon: cfg.aftermathDays,
   });
   
   // Build overlay pack
