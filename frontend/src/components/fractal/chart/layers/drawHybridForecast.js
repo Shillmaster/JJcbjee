@@ -1,13 +1,16 @@
 /**
  * STEP A — Hybrid Forecast Renderer
- * BLOCK 73.3 — 14D Continuity Fix: Added intermediate horizon markers
+ * BLOCK 73.3 — Unified Path Integration
  * 
- * Draws two projections on same canvas:
- * - Synthetic (green) - model forecast
- * - Replay (purple) - primary historical match aftermath
- * - Intermediate markers (7d on 14d trajectory, etc.)
+ * NOW uses unifiedPath as single source of truth:
+ * - syntheticPath[0] = NOW (anchorPrice)
+ * - syntheticPath[1..N] = forecast
+ * - markers come from syntheticPath directly
  * 
- * Uses Catmull-Rom spline for smooth curves.
+ * This eliminates:
+ * - 7→14 continuity breaks
+ * - Marker position mismatches
+ * - Anchor price discrepancies
  */
 
 export function drawHybridForecast(
@@ -20,17 +23,56 @@ export function drawHybridForecast(
   marginTop,
   marginBottom,
   canvasHeight,
-  markers = [] // BLOCK 73.3: Accept markers for continuity
+  markers = [] // Legacy markers (fallback)
 ) {
-  if (!forecast?.pricePath?.length) return;
+  // BLOCK 73.3: Prefer unifiedPath if available
+  const unifiedPath = forecast?.unifiedPath;
   
-  const pricePath = forecast.pricePath;
-  const replayPath = primaryMatch?.replayPath || [];
-  const N = pricePath.length;
+  let syntheticData, replayData, anchorPrice, N;
+  
+  if (unifiedPath?.syntheticPath?.length) {
+    // NEW: Use unified path (includes t=0)
+    syntheticData = unifiedPath.syntheticPath;
+    replayData = unifiedPath.replayPath || [];
+    anchorPrice = unifiedPath.anchorPrice;
+    N = unifiedPath.horizonDays;
+  } else if (forecast?.pricePath?.length) {
+    // LEGACY: Fallback to old format (no t=0)
+    const legacyPath = forecast.pricePath;
+    anchorPrice = forecast.currentPrice;
+    N = legacyPath.length;
+    
+    // Convert to unified format
+    syntheticData = [{ t: 0, price: anchorPrice, pct: 0 }];
+    for (let i = 0; i < N; i++) {
+      syntheticData.push({
+        t: i + 1,
+        price: legacyPath[i],
+        pct: ((legacyPath[i] / anchorPrice) - 1) * 100
+      });
+    }
+    
+    // Legacy replay from primaryMatch
+    if (primaryMatch?.aftermathNormalized?.length) {
+      replayData = [{ t: 0, price: anchorPrice, pct: 0 }];
+      for (let i = 0; i < primaryMatch.aftermathNormalized.length; i++) {
+        const ret = primaryMatch.aftermathNormalized[i];
+        replayData.push({
+          t: i + 1,
+          price: anchorPrice * (1 + ret),
+          pct: ret * 100
+        });
+      }
+    } else {
+      replayData = [];
+    }
+  } else {
+    return; // No data to render
+  }
   
   // Forecast zone width
   const forecastZoneWidth = Math.min(plotW * 0.55, 380) - 70;
-  const dayToX = (day) => xRightAnchor + (day / N) * forecastZoneWidth;
+  const dayToX = (t) => xRightAnchor + (t / N) * forecastZoneWidth;
   
   // === 1. FORECAST ZONE BACKGROUND ===
   ctx.save();
@@ -69,10 +111,11 @@ export function drawHybridForecast(
   ctx.restore();
   
   // === 4. SYNTHETIC LINE (green) with spline ===
-  const syntheticPoints = [{ x: xRightAnchor, y: y(pricePath[0]) }];
-  for (let i = 0; i < N; i++) {
-    syntheticPoints.push({ x: dayToX(i + 1), y: y(pricePath[i]) });
-  }
+  // Build points from unified path (t=0..N)
+  const syntheticPoints = syntheticData.map(p => ({
+    x: dayToX(p.t),
+    y: y(p.price)
+  }));
   
   ctx.save();
   ctx.shadowColor = 'rgba(22, 163, 74, 0.25)';
