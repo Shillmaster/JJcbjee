@@ -177,6 +177,9 @@ export interface FocusPack {
   
   // BLOCK 73.1: Primary Match Selection
   primarySelection?: PrimarySelection;
+  
+  // BLOCK 73.1.1: Normalized Series (STRUCTURE % mode)
+  normalizedSeries?: NormalizedSeries;
 }
 
 // ═══════════════════════════════════════════════════════════════
