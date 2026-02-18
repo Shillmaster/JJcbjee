@@ -69,7 +69,7 @@ export async function focusPackRoutes(fastify: FastifyInstance): Promise<void> {
     
     try {
       const t0 = Date.now();
-      const focusPack = await buildFocusPack(symbol, focus);
+      const focusPack = await buildFocusPack(symbol, focus, phaseId);
       const durationMs = Date.now() - t0;
       
       // Validate that distribution series has correct length
