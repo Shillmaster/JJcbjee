@@ -26,10 +26,10 @@ export function ForecastSummary7d({ focusPack, currentPrice }) {
   const p75 = distributionSeries.p75?.[distributionSeries.p75?.length - 1] ?? 0.05;
   const p90 = distributionSeries.p90?.[distributionSeries.p90?.length - 1] ?? stats.p90Return ?? 0.15;
   
-  // Bias logic
+  // Bias logic - same as capsule renderer
   let bias = 'NEUTRAL';
-  if (p50 > 0.005 && p25 > -0.02) bias = 'BULLISH';
-  else if (p50 < -0.005 && p75 < 0.02) bias = 'BEARISH';
+  if (p50 > 0.005) bias = 'BULLISH';
+  else if (p50 < -0.005) bias = 'BEARISH';
   
   const biasColor = bias === 'BULLISH' ? '#22c55e' : bias === 'BEARISH' ? '#ef4444' : '#6b7280';
   const biasEmoji = bias === 'BULLISH' ? '↑' : bias === 'BEARISH' ? '↓' : '→';
