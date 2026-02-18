@@ -1,45 +1,56 @@
-# Fractal Terminal PRD — BLOCK 72.3 Complete
+# Fractal Terminal PRD — STEP A Complete
 
 ## What's Been Implemented
 
-### BLOCK 72.3 — Visual Polish (COMPLETE)
+### STEP A — Canvas Refactor (3 Modes) ✅
 
-**7D Insight Block:**
-- ✅ "7D OUTLOOK" header в правой зоне
-- ✅ Big "▲ +2.4%" с цветом по направлению
-- ✅ Confidence, Hit rate, Matches stats
-- ✅ Timing: WAIT/ENTER/EXIT
-- ✅ Стрелка с glow эффектом
-- ✅ Пустота справа заполнена информацией
+**Новая архитектура с 3 режимами:**
 
-**14D+ Catmull-Rom Spline:**
-- ✅ Плавная кривая без углов
-- ✅ Нет обрыва между 7d и 14d
-- ✅ Fan с spline boundaries
-- ✅ Gradient stroke с confidence decay
-- ✅ Glow эффект на линии
+1. **Price** (Synthetic Model)
+   - Свечи + SMA + Phase Shading
+   - Synthetic forecast + Fan (P10-P90)
+   - 7D: Arrow mode / 14D+: Trajectory mode
+
+2. **Replay** (Historical)
+   - Fractal overlay
+   - Historical match + aftermath
+   - No synthetic projection
+
+3. **Hybrid** (Dual View) - NEW
+   - Свечи + SMA
+   - Synthetic line (green solid)
+   - Replay line (purple dashed)
+   - Divergence calculation
+
+**Файлы созданы:**
+- `/app/frontend/src/components/fractal/chart/FractalHybridChart.jsx`
+- `/app/frontend/src/components/fractal/chart/layers/drawHybridForecast.js`
 
 **Файлы обновлены:**
-- `/app/frontend/src/components/fractal/chart/layers/draw7dArrow.js`
-- `/app/frontend/src/components/fractal/chart/layers/drawForecast.js`
+- `/app/frontend/src/pages/FractalPage.js` (3 mode switcher)
+- `/app/frontend/src/components/fractal/chart/FractalChartCanvas.jsx` (mode prop)
 
-## Visual Hierarchy (Final)
-- **7D** = Timing bias (стрелка + insight block)
-- **14D-90D** = Tactical trajectory (плавный spline + fan)
-- **180D-365D** = Structure (spline, требует % normalization)
+### Hybrid Summary Panel:
+- SYNTHETIC: +3.9% (Model Projection)
+- REPLAY: -5.3% (Historical 71% sim)
+- DIVERGENCE: 9.2% MODERATE
+
+## Visual Hierarchy
+- **Price Mode** = Pure synthetic model
+- **Replay Mode** = Pure historical analogue
+- **Hybrid Mode** = Model vs History comparison
 
 ## Prioritized Backlog
 
 ### P0 (Next)
-- [ ] 365D % axis normalization (% вместо raw price)
-- [ ] BLOCK 73 — Interactive Phase Shading
+- [ ] BLOCK 73.1 — Primary Match Selection Engine (backend)
+- [ ] 365D % axis normalization
 
 ### P1  
-- [ ] Market State Header
-- [ ] Fractal Explorer
+- [ ] BLOCK 73.2 — Divergence confidence modifier
+- [ ] Interactive Phase Shading
 
-## Spline Algorithm
-Catmull-Rom to Bezier conversion:
-- Control points: cp1 = p1 + (p2-p0)/6, cp2 = p2 - (p3-p1)/6
-- No overshoot
-- Smooth continuity between segments
+## Technical Notes
+- 3 режима не ломают друг друга
+- Каждый рендер-пайплайн изолирован
+- Hybrid использует matches[0] пока, после 73.1 будет primaryMatch
